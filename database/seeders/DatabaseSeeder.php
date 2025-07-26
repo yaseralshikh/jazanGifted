@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AdminSeeder;
 use Database\Seeders\LaratrustSeeder;
+use Database\Seeders\ProvincesSeeder;
+use Database\Seeders\SpecializationsSeeder;
+use Database\Seeders\ResponsibilitiesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +20,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(LaratrustSeeder::class);
         $this->call(AdminSeeder::class);
+        $this->call(ProvincesSeeder::class);
+        $this->call(SpecializationsSeeder::class);
+        $this->call(ResponsibilitiesSeeder::class);
 
         // User::factory(10)->create();
 

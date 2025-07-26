@@ -1,19 +1,20 @@
-php artisan make:migration create_users_table
-php artisan make:migration create_students_table
-php artisan make:migration create_schools_table
-php artisan make:migration create_supervisors_table
-php artisan make:migration create_province_supervisor_table
-php artisan make:migration create_programs_table
-php artisan make:migration create_program_supervisors_table
-php artisan make:migration create_gifted_teachers_table
-php artisan make:migration create_program_registrations_table
-php artisan make:migration create_roles_table
-php artisan make:migration create_permissions_table
-php artisan make:migration create_role_user_table
-php artisan make:migration create_permission_role_table
-php artisan make:migration create_permission_user_table
-php artisan make:migration create_provinces_table
+php artisan make:model Province -m
+php artisan make:model School -m
+php artisan make:model Student -m
+php artisan make:model Supervisor -m
+php artisan make:model Program -m
+php artisan make:model GiftedTeacher -m
+php artisan make:model ProgramRegistration -m
 
+php artisan make:migration create_province_supervisor_table
+php artisan make:migration create_program_supervisors_table
+
+// ملف: create_provinces_table.php
+Schema::create('provinces', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->timestamps();
+});
 
 // ملف: create_users_table.php
 Schema::create('users', function (Blueprint $table) {

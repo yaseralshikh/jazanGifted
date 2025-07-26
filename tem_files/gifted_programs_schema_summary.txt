@@ -1,0 +1,87 @@
+
+🔹 Table: provinces
+- id (PK)
+- name
+
+🔹 Table: schools
+- id (PK)
+- name
+- province_id (FK → provinces.id)
+- educational_stage (enum)
+- ministry_code
+- principal_user_id (FK → users.id)
+- gifted_teacher_user_id (FK → users.id)
+
+🔹 Table: users
+- id (PK)
+- name
+- email
+- password
+- national_id
+- phone
+
+🔹 Table: students
+- id (PK)
+- national_id (unique)
+- birth_date
+- gender (enum)
+- school_id (FK → schools.id)
+- user_id (FK → users.id)
+- talent_score_1
+- talent_score_2
+- talent_score_3
+
+🔹 Table: supervisors
+- id (PK)
+- user_id (FK → users.id)
+- position
+
+🔹 Table: province_supervisor (pivot)
+- id (PK)
+- province_id (FK → provinces.id)
+- supervisor_id (FK → supervisors.id)
+- assigned_by (FK → users.id)
+- assigned_at
+- active (boolean)
+- notes
+
+🔹 Table: programs
+- id (PK)
+- title
+- start_date
+- end_date
+- description
+- province_id (FK → provinces.id)
+- manager_id (FK → supervisors.id)
+- allow_self_registration (boolean)
+
+🔹 Table: program_supervisors (pivot)
+- id (PK)
+- program_id (FK → programs.id)
+- supervisor_id (FK → supervisors.id)
+- role (enum)
+- assigned_at
+- status (enum)
+- participation_hours
+- notes
+
+🔹 Table: gifted_teachers
+- id (PK)
+- user_id (FK → users.id)
+- school_id (FK → schools.id)
+- specialization
+- academic_qualification
+- experience_years
+- assigned_at
+- gender
+- status
+- notes
+
+🔹 Table: program_registrations
+- id (PK)
+- student_id (FK → students.id)
+- program_id (FK → programs.id)
+- registered_at
+- status (enum)
+- evaluation
+- certificate_url
