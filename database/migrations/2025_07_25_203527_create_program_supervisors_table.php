@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
             $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_lead')->default(false);            $table->timestamp('assigned_at')->nullable();
+            $table->boolean('is_lead')->default(false);
+            $table->timestamp('assigned_at')->nullable();
             $table->timestamps();
         });
     }

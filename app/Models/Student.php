@@ -47,7 +47,7 @@ class Student extends Model
     }
 
     // ترشيحات البرامج
-    public function nominations()
+    public function programNominations()
     {
         return $this->hasMany(ProgramNomination::class);
     }

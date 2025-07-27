@@ -32,13 +32,20 @@ class Program extends Model
         return $this->hasMany(ProgramRegistration::class);
     }
 
-    public function supervisors()
-    {
-        return $this->belongsToMany(Supervisor::class, 'program_supervisors')->withTimestamps();
-    }
-
     public function nominations()
     {
         return $this->hasMany(ProgramNomination::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(ProgramReport::class);
+    }
+
+    public function supervisors()
+    {
+        return $this->belongsToMany(Supervisor::class, 'program_supervisors')
+                    ->using(ProgramSupervisor::class)
+                    ->withTimestamps();
     }
 }

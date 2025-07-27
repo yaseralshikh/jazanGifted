@@ -15,4 +15,9 @@ class Specialization extends Model
     {
         return $this->hasMany(GiftedTeacher::class);
     }
+
+    public function scopeable()
+    {
+        return $this->morphTo(__FUNCTION__, 'scope_type', 'scope_id');
+    }
 }

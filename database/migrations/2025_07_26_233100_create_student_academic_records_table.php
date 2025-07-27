@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained()->onDelete('cascade'); // الطالب
             $table->foreignId('academic_year_id')->constrained()->onDelete('cascade'); // العام الدراسي
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
 
             $table->enum('grade', [
                 'KG1', 'KG2',
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->enum('talent_type', ['promising', 'talented', 'exceptionally_talented'])->nullable(); // التصنيف
 
             $table->boolean('promoted')->default(false); // هل انتقل للسنة التالية
-
+            $table->boolean('transferred')->default(false); // هل تم نقله لمدرسة أخرى
             $table->text('note')->nullable(); // ملاحظات إضافية
 
             $table->timestamps();

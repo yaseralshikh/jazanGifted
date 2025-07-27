@@ -16,7 +16,7 @@ class VisitReport extends Model
 
     public function weeklyPlan()
     {
-        return $this->belongsTo(WeeklySupervisorPlan::class, 'weekly_supervisor_plan_id');
+        return $this->belongsTo(WeeklyPlanItem::class, 'weekly_plan_item_id');
     }
 
     public function school()
