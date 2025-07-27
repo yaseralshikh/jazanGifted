@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->foreignId('nominated_by')->constrained('users')->onDelete('set null'); // معلم أو مشرف
+            $table->foreignId('nominated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->text('note')->nullable();
             $table->timestamps();
