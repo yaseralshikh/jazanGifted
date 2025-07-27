@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
@@ -19,4 +21,34 @@ class Student extends Model
         'talent_type',
         'note',
     ];
+
+    // الطالب مرتبط بالمستخدم الأساسي
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // المدرسة التي ينتمي لها الطالب
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    // سجل أكاديمي حسب السنوات
+    public function academicRecords()
+    {
+        return $this->hasMany(StudentAcademicRecord::class);
+    }
+
+    // تسجيل في برامج
+    public function programRegistrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+
+    // ترشيحات البرامج
+    public function nominations()
+    {
+        return $this->hasMany(ProgramNomination::class);
+    }
 }

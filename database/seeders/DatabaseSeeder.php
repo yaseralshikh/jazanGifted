@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(LaratrustSeeder::class);
         $this->call(AdminSeeder::class);
+        $this->call(EducationRegionSeeder::class);
         $this->call(ProvincesSeeder::class);
         $this->call(SpecializationsSeeder::class);
         $this->call(ResponsibilitiesSeeder::class);

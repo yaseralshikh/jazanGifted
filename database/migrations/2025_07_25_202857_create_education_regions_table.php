@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
+        Schema::create('education_regions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->string('name')->unique(); // مثال: جازان، مكة، الرياض
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('education_regions');
     }
 };

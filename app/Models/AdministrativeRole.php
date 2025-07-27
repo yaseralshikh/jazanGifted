@@ -12,4 +12,9 @@ class AdministrativeRole extends Model
         'description',
         'active',
     ];
+
+    public function supervisors()
+    {
+        return $this->hasMany(Supervisor::class);
+    }
 }

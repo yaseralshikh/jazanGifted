@@ -8,6 +8,10 @@ use Laratrust\Contracts\LaratrustUser;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements LaratrustUser
@@ -23,9 +27,10 @@ class User extends Authenticatable implements LaratrustUser
     protected $fillable = [
         'name',
         'email',
-        'password',
         'phone',
         'national_id',
+        'gender',
+        'password',
         'status',
     ];
 
@@ -62,5 +67,47 @@ class User extends Authenticatable implements LaratrustUser
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    // علاقات المستخدم
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->hasOne(Supervisor::class);
+    }
+
+    public function giftedTeacher()
+    {
+        return $this->hasOne(GiftedTeacher::class);
+    }
+
+    public function principalOfSchool()
+    {
+        return $this->hasOne(School::class, 'principal_user_id');
+    }
+
+    public function teacherOfSchool()
+    {
+        return $this->hasOne(School::class, 'gifted_teacher_user_id');
+    }
+
+    public function nominationsMade()
+    {
+        return $this->hasMany(ProgramNomination::class, 'nominated_by');
+    }
+
+    public function responsibilities()
+    {
+        return $this->belongsToMany(Responsibility::class)->withTimestamps();
+    }
+
+    public function programRegistrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
     }
 }

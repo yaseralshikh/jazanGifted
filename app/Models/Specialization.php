@@ -10,4 +10,9 @@ class Specialization extends Model
         'name',
         'description',
     ];
+
+    public function giftedTeachers()
+    {
+        return $this->hasMany(GiftedTeacher::class);
+    }
 }

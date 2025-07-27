@@ -1,0 +1,23 @@
+Table,Description
+users,الحسابات العامة لجميع المستخدمين بالنظام
+administrative_roles,الوظائف الإدارية للمشرفين (مثلاً مدير برامج)
+education_regions,المناطق التعليمية (جازان، مكة...)
+provinces,المحافظات المرتبطة بالمنطقة التعليمية
+schools,المدارس بأنواعها
+students,معلومات الطلاب المرتبطة بالمستخدمين
+supervisors,المشرفين الإداريين مع ربط الوظيفة
+programs,البرامج المقدمة للطلاب
+specializations,تخصصات معلمي الموهوبين
+gifted_teachers,بيانات معلمي الموهوبين
+program_registrations,تسجيل الطلاب في البرامج
+province_supervisor,العلاقة المحورية بين المشرفين والمحافظات
+program_supervisors,العلاقة المحورية بين المشرفين والبرامج
+responsibilities,المهام الإدارية المرتبطة بالمستخدمين
+responsibility_user,جدول محوري لربط المستخدمين بالمهام
+academic_years,السنوات الدراسية المستخدمة في التتبع
+student_academic_records,تتبع السجل الأكاديمي للطالب حسب العام الدراسي
+weekly_supervisor_plans,خطط المشرف الأسبوعية
+weekly_plan_items,عناصر الخطة الأسبوعية (زيارات، ورش...)
+visit_reports,تقارير الزيارة الفعلية للمشرفين
+program_reports,توثيق إنجازات البرامج التعليمية
+program_nominations,ترشيح الطلاب للمشاركة في البرامج

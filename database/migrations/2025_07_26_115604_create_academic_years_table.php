@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
+        Schema::create('academic_years', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->string('name')->unique(); // مثل: 1446/1447
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->boolean('active')->default(false); // لتحديد العام الحالي
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('academic_years');
     }
 };

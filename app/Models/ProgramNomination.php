@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProgramRegistration extends Model
+class ProgramNomination extends Model
 {
     protected $fillable = [
-        'student_id',
         'program_id',
-        'registered_at',
+        'student_id',
+        'nominated_by',
         'status',
-        'evaluation',
-        'certificate_url',
+        'note',
     ];
 
     public function student()
@@ -23,5 +22,10 @@ class ProgramRegistration extends Model
     public function program()
     {
         return $this->belongsTo(Program::class);
+    }
+
+    public function nominator()
+    {
+        return $this->belongsTo(User::class, 'nominated_by');
     }
 }

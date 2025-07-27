@@ -1,0 +1,164 @@
+Model,Relationships
+User,"
+    public function student() {
+        return $this->hasOne(Student::class);
+    }
+    public function supervisor() {
+        return $this->hasOne(Supervisor::class);
+    }
+    public function responsibilities() {
+        return $this->belongsToMany(Responsibility::class, 'responsibility_user');
+    }
+    public function programRegistrations() {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+    public function giftedTeacher() {
+        return $this->hasOne(GiftedTeacher::class);
+    }
+    "
+Student,"
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+    public function programRegistrations() {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+    public function academicRecords() {
+        return $this->hasMany(StudentAcademicRecord::class);
+    }
+    "
+Supervisor,"
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+    public function administrativeRole() {
+        return $this->belongsTo(AdministrativeRole::class, 'administrative_role_id');
+    }
+    public function provinceSupervisors() {
+        return $this->hasMany(ProvinceSupervisor::class);
+    }
+    public function programSupervisors() {
+        return $this->hasMany(ProgramSupervisor::class);
+    }
+    "
+School,"
+    public function province() {
+        return $this->belongsTo(Province::class);
+    }
+    public function students() {
+        return $this->hasMany(Student::class);
+    }
+    public function principal() {
+        return $this->belongsTo(User::class, 'principal_user_id');
+    }
+    public function giftedTeacher() {
+        return $this->belongsTo(User::class, 'gifted_teacher_user_id');
+    }
+    "
+Province,"
+    public function educationRegion() {
+        return $this->belongsTo(EducationRegion::class);
+    }
+    public function schools() {
+        return $this->hasMany(School::class);
+    }
+    public function provinceSupervisors() {
+        return $this->hasMany(ProvinceSupervisor::class);
+    }
+    "
+AdministrativeRole,"
+    public function supervisors() {
+        return $this->hasMany(Supervisor::class);
+    }
+    "
+Responsibility,"
+    public function users() {
+        return $this->belongsToMany(User::class, 'responsibility_user');
+    }
+    "
+ResponsibilityUser,"
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+    public function responsibility() {
+        return $this->belongsTo(Responsibility::class);
+    }
+    "
+Program,"
+    public function registrations() {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+    public function supervisors() {
+        return $this->hasMany(ProgramSupervisor::class);
+    }
+    public function nominations() {
+        return $this->hasMany(ProgramNomination::class);
+    }
+    "
+ProgramRegistration,"
+    public function student() {
+        return $this->belongsTo(Student::class);
+    }
+    public function program() {
+        return $this->belongsTo(Program::class);
+    }
+    "
+ProgramSupervisor,"
+    public function program() {
+        return $this->belongsTo(Program::class);
+    }
+    public function supervisor() {
+        return $this->belongsTo(Supervisor::class);
+    }
+    "
+ProvinceSupervisor,"
+    public function province() {
+        return $this->belongsTo(Province::class);
+    }
+    public function supervisor() {
+        return $this->belongsTo(Supervisor::class);
+    }
+    "
+GiftedTeacher,"
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+    public function specialization() {
+        return $this->belongsTo(Specialization::class);
+    }
+    "
+StudentAcademicRecord,"
+    public function student() {
+        return $this->belongsTo(Student::class);
+    }
+    public function academicYear() {
+        return $this->belongsTo(AcademicYear::class);
+    }
+    "
+AcademicYear,"
+    public function academicRecords() {
+        return $this->hasMany(StudentAcademicRecord::class);
+    }
+    "
+EducationRegion,"
+    public function provinces() {
+        return $this->hasMany(Province::class);
+    }
+    "
+ProgramNomination,"
+    public function student() {
+        return $this->belongsTo(Student::class);
+    }
+    public function program() {
+        return $this->belongsTo(Program::class);
+    }
+    public function nominator() {
+        return $this->belongsTo(User::class, 'nominated_by');
+    }
+    "

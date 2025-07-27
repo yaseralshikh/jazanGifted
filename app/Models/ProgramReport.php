@@ -4,21 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProgramRegistration extends Model
+class ProgramReport extends Model
 {
     protected $fillable = [
-        'student_id',
         'program_id',
-        'registered_at',
-        'status',
+        'report_date',
+        'summary',
+        'attendees_count',
+        'achievements',
         'evaluation',
-        'certificate_url',
     ];
-
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
 
     public function program()
     {

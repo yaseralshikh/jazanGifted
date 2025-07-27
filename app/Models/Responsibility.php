@@ -14,4 +14,9 @@ class Responsibility extends Model
         'scope_type',
         'scope_id',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'responsibility_user')->withTimestamps();
+    }    
 }

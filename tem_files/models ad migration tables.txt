@@ -1,0 +1,717 @@
+models :
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AcademicYear extends Model
+{
+    protected $fillable = [
+        'name',
+        'start_date',
+        'end_date',
+        'active',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AdministrativeRole extends Model
+{
+    protected $fillable = [
+        'name',
+        'code',
+        'description',
+        'active',
+    ];
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class EducationRegion extends Model
+{
+    protected $fillable =[
+        'name'
+    ];
+
+    public function provinces()
+    {
+        return $this->hasMany(Province::class);
+    }
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class GiftedTeacher extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'school_id',
+        'specialization_id',
+        'academic_qualification',
+        'experience_years',
+        'assigned_at',
+        'status',
+        'notes',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Program extends Model
+{
+    protected $fillable = [
+        'title',
+        'start_date',
+        'end_date',
+        'description',
+        'province_id',
+        'manager_id',
+        'allow_self_registration',
+        'status',
+    ];
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProgramNomination extends Model
+{
+    protected $fillable = [
+        'program_id',
+        'student_id',
+        'nominated_by',
+        'status',
+        'note',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProgramRegistration extends Model
+{
+    protected $fillable = [
+        'student_id',
+        'program_id',
+        'registered_at',
+        'status',
+        'evaluation',
+        'certificate_url',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProgramReport extends Model
+{
+    protected $fillable = [
+        'program_id',
+        'report_date',
+        'summary',
+        'attendees_count',
+        'achievements',
+        'evaluation',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Province extends Model
+{
+    protected $fillable = [
+        'name',
+    ];
+
+    public function educationRegion()
+    {
+        return $this->belongsTo(EducationRegion::class);
+    }
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Responsibility extends Model
+{
+    protected $fillable = [
+        'title',
+        'code',
+        'description',
+        'active',
+        'scope_type',
+        'scope_id',
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class School extends Model
+{
+    protected $fillable = [
+        'name',
+        'province_id',
+        'educational_stage',
+        'ministry_code',
+        'principal_user_id',
+        'gifted_teacher_user_id',
+        'gender',
+        'status',
+    ];
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Specialization extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Student extends Model
+{
+    protected $fillable = [
+        'birth_date',
+        'school_id',
+        'user_id',
+        'talent_score_1',
+        'talent_score_2',
+        'talent_score_3',
+        'year__score_1',
+        'year__score_2',
+        'year__score_3',
+        'talent_type',
+        'note',
+    ];
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Supervisor extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'administrative_role_id'
+    ];
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
+use Laratrust\Contracts\LaratrustUser;
+use Illuminate\Notifications\Notifiable;
+use Laratrust\Traits\HasRolesAndPermissions;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable implements LaratrustUser
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable, HasRolesAndPermissions;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'phone',
+        'national_id',
+        'status',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    /**
+     * Get the user's initials
+     */
+    public function initials(): string
+    {
+        return Str::of($this->name)
+            ->explode(' ')
+            ->take(2)
+            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->implode('');
+    }
+}
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class VisitReport extends Model
+{
+    protected $fillable = [
+        'weekly_plan_item_id',
+        'visited_at',
+        'summary',
+        'recommendations',
+        'status',
+    ];
+}
+
+
+<?php
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class StudentAcademicRecord extends Model
+{
+    protected $fillable = [
+        'student_id',
+        'academic_year_id',
+        'grade',
+        'stage',
+        'talent_score',
+        'talent_type',
+        'promoted',
+        'note',
+    ];
+}
+
+
+
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+class WeeklyPlanItem extends Model
+{
+    protected $fillable = [
+        'weekly_supervisor_plan_id',
+        'date',
+        'location',
+        'title',
+        'objectives',
+        'activities',
+        'notes',
+        'status',
+    ];
+
+    public function plan() : BelongsTo
+    {
+        return $this->belongsTo(WeeklySupervisorPlan::class, 'weekly_supervisor_plan_id');
+    }
+
+    public function visitReport() : HasOne
+    {
+        return $this->hasOne(VisitReport::class);
+    }
+}
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class WeeklySupervisorPlan extends Model
+{
+    protected $fillable =[
+        'supervisor_id',
+        'week_start',
+        'week_end',
+    ];
+
+    public function supervisor() : BelongsTo
+    {
+        return $this->belongsTo(Supervisor::class);
+    }
+
+    public function items() : HasMany
+    {
+        return $this->hasMany(WeeklyPlanItem::class);
+    }
+}
+
+
+
+
+Migration tables :
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone');
+            $table->string('national_id')->unique();
+            $table->enum('gender', ['male', 'female']);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+
+        Schema::create('administrative_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->text('description');
+            $table->boolean('active')->default(true); // حالة التفعيل
+            $table->timestamps();
+        });
+
+
+        Schema::create('education_regions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // مثال: جازان، مكة، الرياض
+            $table->timestamps();
+        });
+
+
+        Schema::create('provinces', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+
+        Schema::create('schools', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->enum('educational_stage', ['kindergarten','primary','middle','secondary','complex']);
+            $table->string('ministry_code');
+            $table->foreignId('principal_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('gifted_teacher_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->enum('gender', ['male', 'female']);
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+        Schema::create('students', function (Blueprint $table) {
+            $table->id();
+            $table->date('birth_date');
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->float('talent_score_1')->nullable();
+            $table->float('talent_score_2')->nullable();
+            $table->float('talent_score_3')->nullable();
+            $table->date('year__score_1');
+            $table->date('year__score_2');
+            $table->date('year__score_3');
+            $table->enum('talent_type', ['promising', 'talented', ' exceptionally_talented']);
+            $table->text('note')->nullable();
+            $table->timestamps();
+        });
+
+
+        Schema::create('supervisors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('administrative_role_id')->constrained('administrative_roles')->onDelete('restrict');
+            $table->timestamps();
+        });
+
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->text('description');
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->foreignId('manager_id')->constrained('supervisors')->onDelete('cascade');
+            $table->boolean('allow_self_registration')->default(false);
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+        Schema::create('specializations', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('gifted_teachers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('specialization_id')->constrained()->onDelete('cascade');
+            $table->string('academic_qualification')->nullable();
+            $table->integer('experience_years')->nullable();
+            $table->timestamp('assigned_at')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->text('notes')->nullable();
+            $table->timestamps();
+        });
+
+
+        Schema::create('program_registrations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->timestamp('registered_at')->nullable();
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed'])->default('pending');
+            $table->text('evaluation')->nullable();
+            $table->string('certificate_url')->nullable();
+            $table->timestamps();
+        });
+
+
+
+        Schema::create('province_supervisor', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->boolean('active')->default(true);
+            $table->text('notes')->nullable();
+            $table->timestamps();
+        });
+
+
+
+        Schema::create('program_supervisors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_lead')->default(false);            $table->timestamp('assigned_at')->nullable();
+            $table->timestamps();
+        });
+
+
+        Schema::create('responsibilities', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique(); // اسم المهمة
+            $table->string('code')->unique(); // رمز فريد للمهمة
+            $table->text('description')->nullable(); // وصف المهمة
+            $table->boolean('active')->default(true); // حالة التفعيل
+            $table->string('scope_type')->nullable(); // كيان المهمة مثل (program, school, etc.)
+            $table->unsignedBigInteger('scope_id')->nullable(); // id للكيان المرتبط
+            $table->timestamps();
+        });
+
+
+        Schema::create('responsibility_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('responsibility_id')->constrained('responsibilities')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+
+        Schema::create('academic_years', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // مثل: 1446/1447
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->boolean('active')->default(false); // لتحديد العام الحالي
+            $table->timestamps();
+        });
+
+
+        Schema::create('student_academic_records', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('academic_year_id')->constrained('academic_years')->onDelete('cascade');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
+            $table->string('grade_level'); // مثل: الصف الخامس
+            $table->enum('stage', ['kindergarten', 'primary', 'middle', 'secondary']);
+            $table->boolean('transferred')->default(false); // هل تم نقل الطالب؟
+            $table->timestamps();
+        });
+
+
+        Schema::create('weekly_supervisor_plans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->date('week_start');
+            $table->date('week_end');
+            $table->timestamps();
+        });
+
+
+        Schema::create('weekly_plan_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('weekly_supervisor_plan_id')->constrained()->onDelete('cascade');
+            $table->date('date');
+            $table->string('location');
+            $table->string('title');
+            $table->text('objectives')->nullable();
+            $table->text('activities')->nullable();
+            $table->text('notes')->nullable();
+            $table->enum('status', ['pending', 'done'])->default('pending');
+            $table->timestamps();
+        });
+
+
+        Schema::create('visit_reports', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('weekly_plan_item_id')->constrained()->onDelete('cascade'); // الربط بالمهمة الأسبوعية
+            $table->dateTime('visited_at');
+            $table->text('summary')->nullable();           // ملخص الزيارة
+            $table->text('recommendations')->nullable();   // التوصيات
+            $table->enum('status', ['done', 'delayed', 'cancelled'])->default('done');
+            $table->timestamps();
+        });
+
+        Schema::create('program_reports', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->date('report_date');
+            $table->text('summary')->nullable();
+            $table->unsignedInteger('attendees_count')->default(0);
+            $table->text('achievements')->nullable();
+            $table->text('evaluation')->nullable();
+            $table->timestamps();
+        });
+
+
+        Schema::create('program_nominations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('nominated_by')->constrained('users')->onDelete('set null'); // معلم أو مشرف
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->text('note')->nullable();
+            $table->timestamps();
+        });
+
+
+
+        Schema::create('student_academic_records', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade'); // الطالب
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade'); // العام الدراسي
+
+            $table->enum('grade', [
+                'KG1', 'KG2',
+                'G1', 'G2', 'G3', 'G4', 'G5', 'G6',
+                'G7', 'G8', 'G9',
+                'G10', 'G11', 'G12'
+            ]); // الصف الدراسي
+
+            $table->enum('stage', ['kindergarten', 'primary', 'middle', 'secondary']); // المرحلة الدراسية
+
+            $table->float('talent_score')->nullable(); // نتيجة مقياس موهبة
+            $table->enum('talent_type', ['promising', 'talented', 'exceptionally_talented'])->nullable(); // التصنيف
+
+            $table->boolean('promoted')->default(false); // هل انتقل للسنة التالية
+
+            $table->text('note')->nullable(); // ملاحظات إضافية
+
+            $table->timestamps();
+        });

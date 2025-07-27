@@ -16,4 +16,29 @@ class Program extends Model
         'allow_self_registration',
         'status',
     ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(Supervisor::class, 'manager_id');
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+
+    public function supervisors()
+    {
+        return $this->belongsToMany(Supervisor::class, 'program_supervisors')->withTimestamps();
+    }
+
+    public function nominations()
+    {
+        return $this->hasMany(ProgramNomination::class);
+    }
 }

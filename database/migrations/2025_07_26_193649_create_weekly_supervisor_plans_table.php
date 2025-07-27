@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
+        Schema::create('weekly_supervisor_plans', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->date('week_start');
+            $table->date('week_end');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('weekly_supervisor_plans');
     }
 };
