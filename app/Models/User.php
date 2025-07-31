@@ -71,6 +71,16 @@ class User extends Authenticatable implements LaratrustUser
 
     // علاقات المستخدم
 
+    public function provinces()
+    {
+        return $this->belongsToMany(Province::class);
+    }
+
+    public function educationRegions()
+    {
+        return $this->belongsToMany(EducationRegion::class);
+    }
+
     public function student()
     {
         return $this->hasOne(Student::class);

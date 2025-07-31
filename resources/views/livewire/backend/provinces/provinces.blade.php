@@ -6,7 +6,7 @@
                 <flux:subheading size="lg" class="mb-2">{{ __('Manage your provinces') }}</flux:subheading>
                 <flux:separator variant="subtle" />
             </div>
-
+            
             <livewire:backend.provinces.provinces-list />  
         </div>
     </div>

@@ -13,6 +13,11 @@ class Province extends Model
         return $this->belongsTo(EducationRegion::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'province_user')->withTimestamps();
+    }
+
     public function schools()
     {
         return $this->hasMany(School::class);

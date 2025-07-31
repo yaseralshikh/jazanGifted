@@ -25,6 +25,8 @@ class AdminSeeder extends Seeder
             'status'            => 1,  
         ]);
 
+        $user->provinces()->attach(1); // ربط المستخدم بالمحافظة الأولى
+        $user->educationRegions()->attach(1); // ربط المستخدم بالمنطقة التعليمية
         $user->addRole('superadmin');
     }
 }
