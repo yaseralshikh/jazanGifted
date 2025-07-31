@@ -1,5 +1,5 @@
 <div>
-    <flux:modal name="create-region" class="md:w-96">
+    <flux:modal name="create-region" class="md:w-96" x-on:close="$dispatch('closeCreateModal')">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Create Region</flux:heading>

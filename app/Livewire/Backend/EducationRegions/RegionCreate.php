@@ -4,6 +4,7 @@ namespace App\Livewire\Backend\EducationRegions;
 
 use Flux;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\EducationRegion;
 
 class RegionCreate extends Component
@@ -12,10 +13,19 @@ class RegionCreate extends Component
     public $status = true; // Default status to true
 
     protected $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:education_regions,name',
         'status' => 'required|boolean',
     ];
 
+    #[On('closeCreateModal')]
+    public function closeCreateModal()
+    {
+        $this->reset(['name', 'status']);
+        // يمكن أيضاً استخدام resetValidation() إذا فيه أخطاء سابقة
+        $this->resetValidation();
+        Flux::modal('create-region')->close();
+    }
+    
     public function submit()
     {
         $this->validate();

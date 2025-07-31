@@ -1,3 +1,31 @@
 <div>
-    {{-- Do your work, then step back. --}}
+    <flux:modal name="create-province" class="md:w-96" x-on:close="$dispatch('closeCreateModal')">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Create Province</flux:heading>
+                <flux:text class="mt-2">Add details for province.</flux:text>
+            </div>
+
+            <flux:input wire:model="name" label="Name" placeholder="Province title" />
+
+            <flux:select wire:model="education_region_id" label="Region">
+                <option value="" >Select region</option>
+                @foreach($regions as $region)
+                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                @endforeach
+            </flux:select>
+
+            <flux:select wire:model="status" label="Status">
+                <option value="" disabled>Select status</option>
+                <option value="1">Active</option>
+                <option value="0">Disactive</option>
+            </flux:select>
+
+            <div class="flex">
+                <flux:spacer />
+
+                <flux:button type="submit" variant="primary" wire:click="submit">Save</flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </div>
