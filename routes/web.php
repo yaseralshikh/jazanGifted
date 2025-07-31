@@ -11,9 +11,15 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::view('admin/education-regions', 'livewire.backend.education-regions.regions')
-    ->middleware(['auth', 'verified'])
-    ->name('education-regions');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:superadmin'])->group(function () {
+    // Admin education-regions
+    Route::view('education-regions', 'livewire.backend.education-regions.regions')
+        ->name('education-regions');
+    // Admin Provinces
+    Route::view('provinces', 'livewire.backend.provinces.provinces')
+        ->name('provinces');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

@@ -14,7 +14,8 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('education-regions')" :current="request()->routeIs('education-regions')" wire:navigate>{{ __('Regions') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('admin.education-regions')" :current="request()->routeIs('education-regions')" wire:navigate>{{ __('Regions') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('admin.provinces')" :current="request()->routeIs('provinces')" wire:navigate>{{ __('Provinces') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -63,6 +64,16 @@
                     <flux:menu.radio.group>
                         <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
+
+                    <flux:menu.separator />
+
+                    @role('superadmin')
+                        <flux:menu.radio.group>
+                            <flux:menu.item href="{{ url('/laratrust') }}" icon="shield-check" wire:navigate>
+                                {{ __('Laratrust') }}
+                            </flux:menu.item>
+                        </flux:menu.radio.group>
+                    @endrole
 
                     <flux:menu.separator />
 
