@@ -20,13 +20,13 @@ class AdminSeeder extends Seeder
             'national_id'       => '1047092406',
             'phone'             => '966505887741',
             'gender'            =>  'male',
+            'education_region_id' => 1, // ربط المستخدم بالمنطقة التعليمية الأولى
             'password'          => bcrypt('123123123'),
             'email_verified_at' => now(),
             'status'            => 1,  
         ]);
 
         $user->provinces()->attach(1); // ربط المستخدم بالمحافظة الأولى
-        $user->educationRegions()->attach(1); // ربط المستخدم بالمنطقة التعليمية
         $user->addRole('superadmin');
     }
 }

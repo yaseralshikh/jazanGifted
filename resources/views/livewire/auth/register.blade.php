@@ -1,21 +1,62 @@
 <?php
 
 use App\Models\User;
+use App\Models\EducationRegion;
+use App\Models\Province;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Illuminate\Database\Eloquent\Collection;
 
-new #[Layout('components.layouts.auth')] class extends Component {
-    public string $name                     = '';
-    public string $email                    = '';
-    public string $password                 = '';
-    public string $password_confirmation    = '';
-    public string $national_id              = '';
-    public string $phone                    = '';
-    public string $gender                   = '';
+new #[Layout('components.layouts.auth')] class extends Component
+{
+    // بيانات المستخدم
+    public string $name = '';
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
+    public string $national_id = '';
+    public string $phone = '';
+    public string $gender = '';
+
+    // الربط بالمنطقة والمحافظة
+    public int $education_region_id = 0;
+    public int $province_id = 0;
+
+    // بيانات خارجية لاتمام عملية الربط
+    public Collection $educationRegions;
+    public array $provinces = [];
+    public bool $loadingProvinces = false;
+
+    // تحميل بيانات المناطق
+    public function mount(): void
+    {
+        $this->educationRegions = EducationRegion::select('id', 'name')->get();
+    }
+
+    // عند تغيير المنطقة التعليمية
+    public function updatedEducationRegionId($value): void
+    {
+        $this->loadProvinces();
+    }
+
+    // تحميل المحافظات حسب المنطقة
+    public function loadProvinces(): void
+    {
+        $this->loadingProvinces = true;
+        $this->province_id = 0;
+
+        try {
+            $this->provinces = Province::where('education_region_id', $this->education_region_id)
+                ->pluck('name', 'id')
+                ->toArray();
+        } finally {
+            $this->loadingProvinces = false;
+        }
+    }
 
     /**
      * Handle an incoming registration request.
@@ -23,23 +64,21 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public function register(): void
     {
         $validated = $this->validate([
-            'name'          => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone'         => ['required', 'regex:/^9665[0-9]{8}$/', 'unique:users,phone'],
-            'national_id'   => ['required', 'digits:10', 'unique:users,national_id'],
-            'gender'        => ['required', 'in:male,female'],
-            'password'      => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'name'                  => ['required', 'string', 'max:255'],
+            'email'                 => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone'                 => ['required', 'regex:/^9665[0-9]{8}$/', 'unique:users,phone'],
+            'national_id'           => ['required', 'digits:10', 'unique:users,national_id'],
+            'education_region_id'   => ['required', 'exists:education_regions,id'],
+            'province_id'           => ['required', 'exists:provinces,id'],
+            'gender'                => ['required', 'in:male,female'],
+            'password'              => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-
         $user = User::create($validated);
-
         event(new Registered(($user)));
-
-        // ✅ إسناد دور user للمستخدم الجديد مباشرة
         $user->addRole('user');
-
+        $user->provinces()->attach($validated['province_id']);
         Auth::login($user);
 
         $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
@@ -104,6 +143,36 @@ new #[Layout('components.layouts.auth')] class extends Component {
             <option value="male">{{ __('Male') }}</option>
             <option value="female">{{ __('Female') }}</option>
         </flux:select>
+
+        <!-- Education Region and Province -->
+        <div>
+            <flux:select 
+                wire:model="education_region_id"
+                wire:change="loadProvinces"
+                id="education_region_id"
+                :label="__('Education Region')" 
+                required
+            >
+                <option value="0">{{ __('Select education region') }}</option>
+                @foreach ($educationRegions as $region)
+                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                @endforeach
+            </flux:select>
+
+            <flux:select 
+                wire:model="province_id" 
+                :label="__('Province')" 
+                id="province_id"
+                required
+            >
+                <option value="0">{{ __('Select province') }}</option>
+                @if(!empty($provinces))
+                    @foreach ($provinces as $id => $name)
+                        <option value="{{$id }}">{{ $name }}</option>
+                    @endforeach
+                @endif
+            </flux:select>
+        </div>
 
         <!-- Password -->
         <flux:input

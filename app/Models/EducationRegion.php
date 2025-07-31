@@ -18,6 +18,6 @@ class EducationRegion extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'education_region_user')->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 }

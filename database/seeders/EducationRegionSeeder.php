@@ -14,7 +14,7 @@ class EducationRegionSeeder extends Seeder
     public function run(): void
     {
         DB::table('education_regions')->insert([
-            ['name' => 'جازان', 'status' => 1]
+            ['name' => 'الادارة العامة للتعليم بمنطقة جازان', 'status' => 1]
         ]);
     }
 }

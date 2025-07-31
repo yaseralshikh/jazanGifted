@@ -30,6 +30,7 @@ class User extends Authenticatable implements LaratrustUser
         'phone',
         'national_id',
         'gender',
+        'education_region_id', // ربط المستخدم بالمنطقة التعليمية
         'password',
         'status',
     ];
@@ -76,9 +77,9 @@ class User extends Authenticatable implements LaratrustUser
         return $this->belongsToMany(Province::class);
     }
 
-    public function educationRegions()
+    public function educationRegion()
     {
-        return $this->belongsToMany(EducationRegion::class);
+        return $this->belongsTo(EducationRegion::class);
     }
 
     public function student()
