@@ -10,7 +10,8 @@ class Supervisor extends Model
 {
     protected $fillable = [
         'user_id',
-        'administrative_role_id'
+        'administrative_role_id',
+        'status',
     ];
 
     public function user()

@@ -9,11 +9,13 @@ class StudentAcademicRecord extends Model
     protected $fillable = [
         'student_id',
         'academic_year_id',
+        'school_id',
         'grade',
         'stage',
         'talent_score',
         'talent_type',
         'promoted',
+        'transferred',
         'note',
     ];
 

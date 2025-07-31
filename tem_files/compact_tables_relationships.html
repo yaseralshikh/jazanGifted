@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مخطط الجداول - ملخص</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fefefe; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; direction: rtl; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        th { background-color: #2c3e50; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        caption { caption-side: top; font-size: 1.5em; margin: 10px; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>📘 ملخص الجداول والعلاقات</h1>
+    <table>
+        <caption>كل الحقول في خلية واحدة لكل جدول</caption>
+        <thead>
+            <tr>
+                <th>اسم الجدول</th>
+                <th>كل الحقول</th>
+                <th>الجداول المرتبطة</th>
+                <th>أنواع العلاقات</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>academic_years</td>
+            <td>active, end_date, name, start_date</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>administrative_roles</td>
+            <td>active, code, description, name</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>education_regions</td>
+            <td>name</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>gifted_teachers</td>
+            <td>academic_qualification, assigned_at, experience_years, notes, school_id, specialization_id, user_id</td>
+            <td>users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>program_nominations</td>
+            <td>nominated_by, note, program_id, student_id</td>
+            <td>users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>program_registrations</td>
+            <td>certificate_url, evaluation, program_id, registered_at, student_id</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>program_reports</td>
+            <td>achievements, attendees_count, evaluation, program_id, report_date, summary</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>program_supervisors</td>
+            <td>assigned_at, is_lead, program_id, supervisor_id</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>programs</td>
+            <td>allow_self_registration, description, end_date, manager_id, province_id, start_date, status, title</td>
+            <td>supervisors</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>province_supervisor</td>
+            <td>active, notes, province_id, supervisor_id</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>provinces</td>
+            <td>education_region_id, name</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>responsibilities</td>
+            <td>active, code, description, scope_id, scope_type, title</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>responsibility_user</td>
+            <td>responsibility_id, user_id</td>
+            <td>responsibilities, users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>schools</td>
+            <td>gifted_teacher_user_id, ministry_code, name, principal_user_id, province_id, status</td>
+            <td>users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>specializations</td>
+            <td>description, name</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>student_academic_records</td>
+            <td>academic_year_id, note, promoted, school_id, student_id, talent_score, transferred</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>students</td>
+            <td>birth_date, note, school_id, talent_score_1, talent_score_2, talent_score_3, user_id, year__score_1, year__score_2, year__score_3</td>
+            <td>users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>supervisors</td>
+            <td>administrative_role_id, user_id</td>
+            <td>administrative_roles, users</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>users</td>
+            <td>email, email_verified_at, name, national_id, password, phone, status</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    
+        <tr>
+            <td>visit_reports</td>
+            <td>recommendations, summary, visited_at, weekly_plan_item_id</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>weekly_plan_items</td>
+            <td>activities, date, location, notes, objectives, title, weekly_supervisor_plan_id</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        <tr>
+            <td>weekly_supervisor_plans</td>
+            <td>supervisor_id, week_end, week_start</td>
+            <td>-</td>
+            <td>FK</td>
+        </tr>
+    
+        </tbody>
+    </table>
+</body>
+</html>

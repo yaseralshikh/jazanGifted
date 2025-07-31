@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('code')->unique();
             $table->text('description');
-            $table->boolean('active')->default(true); // حالة التفعيل
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

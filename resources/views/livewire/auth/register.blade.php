@@ -9,10 +9,13 @@ use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.auth')] class extends Component {
-    public string $name = '';
-    public string $email = '';
-    public string $password = '';
-    public string $password_confirmation = '';
+    public string $name                     = '';
+    public string $email                    = '';
+    public string $password                 = '';
+    public string $password_confirmation    = '';
+    public string $national_id              = '';
+    public string $phone                    = '';
+    public string $gender                   = '';
 
     /**
      * Handle an incoming registration request.
@@ -20,14 +23,22 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public function register(): void
     {
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'name'          => ['required', 'string', 'max:255'],
+            'email'         => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone'         => ['required', 'regex:/^9665[0-9]{8}$/', 'unique:users,phone'],
+            'national_id'   => ['required', 'digits:10', 'unique:users,national_id'],
+            'gender'        => ['required', 'in:male,female'],
+            'password'      => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = User::create($validated))));
+        $user = User::create($validated);
+
+        event(new Registered(($user)));
+
+        // ✅ إسناد دور user للمستخدم الجديد مباشرة
+        $user->addRole('user');
 
         Auth::login($user);
 
@@ -62,6 +73,37 @@ new #[Layout('components.layouts.auth')] class extends Component {
             autocomplete="email"
             placeholder="email@example.com"
         />
+
+        <!-- Phone -->
+        <flux:input
+            wire:model="phone"
+            :label="__('Phone number')"
+            type="text"
+            required
+            maxlength="12"
+            :placeholder="__('9665xxxxxxxx')"
+        />
+
+        <!-- National ID -->
+        <flux:input
+            wire:model="national_id"
+            :label="__('National ID')"
+            type="text"
+            required
+            maxlength="10"
+            :placeholder="__('10-digit national ID')"
+        />
+
+        <!-- Gender -->
+        <flux:select
+            wire:model="gender"
+            :label="__('Gender')"
+            required
+        >
+            <option value="">{{ __('Select gender') }}</option>
+            <option value="male">{{ __('Male') }}</option>
+            <option value="female">{{ __('Female') }}</option>
+        </flux:select>
 
         <!-- Password -->
         <flux:input

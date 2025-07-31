@@ -10,7 +10,7 @@ class Responsibility extends Model
         'title',
         'code',
         'description',
-        'active',
+        'status',
         'scope_type',
         'scope_id',
     ];

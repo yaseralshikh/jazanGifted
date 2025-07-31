@@ -10,7 +10,7 @@ class AcademicYear extends Model
         'name',
         'start_date',
         'end_date',
-        'active',
+        'status',
     ];
 
     public function studentRecords()

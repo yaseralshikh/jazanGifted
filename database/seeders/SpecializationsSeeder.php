@@ -14,20 +14,20 @@ class SpecializationsSeeder extends Seeder
     public function run(): void
     {
         DB::table('specializations')->insert([
-            ['name' => 'لغة عربية'],
-            ['name' => 'لغة إنجليزية'],
-            ['name' => 'رياضيات'],
-            ['name' => 'علوم'],
-            ['name' => 'اجتماعيات'],
-            ['name' => 'اسلامية'],
-            ['name' => 'قرآن'],
-            ['name' => 'فنية'],
-            ['name' => 'بدنية'],
-            ['name' => 'حاسب آلي'],
-            ['name' => 'فيزياء'],
-            ['name' => 'كيمياء'],
-            ['name' => 'أحياء'],
-            ['name' => 'علم نفس'],
+            ['name' => 'لغة عربية', 'status' => 1],
+            ['name' => 'لغة إنجليزية', 'status' => 1],
+            ['name' => 'رياضيات', 'status' => 1],
+            ['name' => 'علوم', 'status' => 1],
+            ['name' => 'اجتماعيات', 'status' => 1],
+            ['name' => 'اسلامية', 'status' => 1],
+            ['name' => 'قرآن', 'status' => 1],
+            ['name' => 'فنية', 'status' => 1],
+            ['name' => 'بدنية', 'status' => 1],
+            ['name' => 'حاسب آلي', 'status' => 1],
+            ['name' => 'فيزياء', 'status' => 1],
+            ['name' => 'كيمياء', 'status' => 1],
+            ['name' => 'أحياء', 'status' => 1],
+            ['name' => 'علم نفس', 'status' => 1],
         ]);
     }
 }

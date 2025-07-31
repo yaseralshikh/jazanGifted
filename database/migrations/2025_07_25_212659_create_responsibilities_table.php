@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title')->unique(); // اسم المهمة
             $table->string('code')->unique(); // رمز فريد للمهمة
             $table->text('description')->nullable(); // وصف المهمة
-            $table->boolean('active')->default(true); // حالة التفعيل
+            $table->unsignedTinyInteger('status')->default(0);
             $table->string('scope_type')->nullable(); // كيان المهمة مثل (program, school, etc.)
             $table->unsignedBigInteger('scope_id')->nullable(); // id للكيان المرتبط
             $table->timestamps();

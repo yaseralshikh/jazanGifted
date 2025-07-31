@@ -10,7 +10,7 @@ class AdministrativeRole extends Model
         'name',
         'code',
         'description',
-        'active',
+        'status',
     ];
 
     public function supervisors()

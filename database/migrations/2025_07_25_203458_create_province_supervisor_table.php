@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('province_id')->constrained()->onDelete('cascade');
             $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
-            $table->boolean('active')->default(true);
+            $table->unsignedTinyInteger('status')->default(1);
             $table->text('notes')->nullable();
             $table->timestamps();
         });

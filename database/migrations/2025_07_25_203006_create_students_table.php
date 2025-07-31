@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('year__score_3');
             $table->enum('talent_type', ['promising', 'talented', ' exceptionally_talented']);
             $table->text('note')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

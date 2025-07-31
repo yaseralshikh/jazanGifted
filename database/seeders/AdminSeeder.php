@@ -19,8 +19,10 @@ class AdminSeeder extends Seeder
             'email'             => 'yaseralshikh@gmail.com',
             'national_id'       => '1047092406',
             'phone'             => '966505887741',
+            'gender'            =>  'male',
             'password'          => bcrypt('123123123'),
             'email_verified_at' => now(),
+            'status'            => 1,  
         ]);
 
         $user->addRole('superadmin');

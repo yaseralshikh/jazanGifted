@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique(); // مثل: 1446/1447
             $table->date('start_date');
             $table->date('end_date');
-            $table->boolean('active')->default(false); // لتحديد العام الحالي
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

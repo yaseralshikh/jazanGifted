@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('administrative_role_id')->constrained('administrative_roles')->onDelete('restrict');
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

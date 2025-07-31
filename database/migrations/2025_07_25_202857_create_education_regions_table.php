@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('education_regions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // مثال: جازان، مكة، الرياض
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

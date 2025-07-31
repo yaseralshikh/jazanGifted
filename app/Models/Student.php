@@ -20,6 +20,7 @@ class Student extends Model
         'year__score_3',
         'talent_type',
         'note',
+        'status',
     ];
 
     // الطالب مرتبط بالمستخدم الأساسي

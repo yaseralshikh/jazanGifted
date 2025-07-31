@@ -52,7 +52,7 @@ class ResponsibilitiesSeeder extends Seeder
                     'description' => $item['description'],
                     'scope_type' => $item['scope_type'],
                     'scope_id' => $item['scope_id'],
-                    'active' => true,
+                    'status' => true,
                 ]
             );
         }

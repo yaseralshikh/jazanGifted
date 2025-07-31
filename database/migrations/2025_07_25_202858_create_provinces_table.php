@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
