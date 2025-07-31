@@ -91,7 +91,7 @@ new #[Layout('components.layouts.auth')] class extends Component
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form wire:submit="register" class="flex flex-col gap-6">
+    {{-- <form wire:submit="register" class="flex flex-col gap-6">
         <!-- Name -->
         <flux:input
             wire:model="name"
@@ -201,7 +201,57 @@ new #[Layout('components.layouts.auth')] class extends Component
                 {{ __('Create account') }}
             </flux:button>
         </div>
+    </form> --}}
+
+    <form wire:submit="register" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" :placeholder="__('Full name')" />
+        </div>
+        <div>
+            <flux:input wire:model="email" :label="__('Email address')" type="email" required autocomplete="email" placeholder="email@example.com" />
+        </div>
+        <div>
+            <flux:input wire:model="phone" :label="__('Phone number')" type="text" required maxlength="12" :placeholder="__('9665xxxxxxxx')" />
+        </div>
+        <div>
+            <flux:input wire:model="national_id" :label="__('National ID')" type="text" required maxlength="10" :placeholder="__('10-digit national ID')" />
+        </div>
+        <div>
+            <flux:select wire:model="education_region_id" wire:change="loadProvinces" id="education_region_id" :label="__('Education Region')" required>
+                <option value="0">{{ __('Select education region') }}</option>
+                @foreach ($educationRegions as $region)
+                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                @endforeach
+            </flux:select>
+        </div>
+        <div>
+            <flux:select wire:model="province_id" :label="__('Province')" id="province_id" required>
+                <option value="0">{{ __('Select province') }}</option>
+                @foreach ($provinces as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </flux:select>
+        </div>
+        <div>
+            <flux:input wire:model="password" :label="__('Password')" type="password" required autocomplete="new-password" :placeholder="__('Password')" viewable />
+        </div>
+        <div>
+            <flux:input wire:model="password_confirmation" :label="__('Confirm password')" type="password" required autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
+        </div>
+        <div>
+            <flux:select wire:model="gender" :label="__('Gender')" required>
+                <option value="">{{ __('Select gender') }}</option>
+                <option value="male">{{ __('Male') }}</option>
+                <option value="female">{{ __('Female') }}</option>
+            </flux:select>
+        </div>
+        <div class="md:col-span-2">
+            <flux:button type="submit" variant="primary" class="w-full">
+                {{ __('Create account') }}
+            </flux:button>
+        </div>
     </form>
+
 
     <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
         <span>{{ __('Already have an account?') }}</span>
