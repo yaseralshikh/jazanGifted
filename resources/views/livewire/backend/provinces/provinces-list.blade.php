@@ -60,7 +60,15 @@
 
             {{-- loading search --}}
             <div wire:loading.delay wire:target="term" dir="rtl" class="text-sm text-gray-500 mt-1">جاري البحث...</div>
+            
+            <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-50">
+                <option value="">All Regions</option>
+                @foreach($regions as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </flux:select>
 
+            {{-- زر البحث --}}
             {{-- نموذج البحث --}}
             <div class="w-full md:w-96 relative">
                 <flux:input placeholder="Search provinces" wire:model.live.debounce.300ms="term">

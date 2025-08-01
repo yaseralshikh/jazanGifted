@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\Province;
 use Livewire\Attributes\On;
 use App\Exports\ProvincesExport;
+use App\Models\EducationRegion;
 
 class ProvincesList extends Component
 {
@@ -15,6 +16,8 @@ class ProvincesList extends Component
     public $provinceName;
     public $provinceRegion;
     public $provinceStatus;
+
+    public $regionFilter = 1;// Filter by region
 
     public $term = '';
     public string $sortField = 'id'; // الحقل الافتراضي
@@ -110,16 +113,21 @@ class ProvincesList extends Component
             ->when($this->term, fn($q) =>
                 $q->where('name', 'like', '%' . $this->term . '%')
             )
+            ->when($this->regionFilter, fn($q) =>
+                $q->where('education_region_id', $this->regionFilter)
+            )
             ->orderBy($this->sortField, $this->sortDirection)
             ->latest('created_at')
-            ->latest()
             ->get();
     }
 
     public function render()
     {
+        $regions = EducationRegion::pluck('name', 'id');
+
         return view('livewire.backend.provinces.provinces-list', [
             'provinces' => $this->provinces,
+            'regions' => $regions,
         ]);
     }
 }
