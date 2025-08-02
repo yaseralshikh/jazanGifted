@@ -73,6 +73,11 @@
                     <option value="{{ $id }}">{{ $name }}</option>
                 @endforeach
             </flux:select>
+            <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-50">
+                <option value="">All Gender</option>
+                <option value="male">Mail</option>
+                <option value="'female">Female</option>
+            </flux:select>
 
             {{-- زر البحث --}}
             <div class="w-full md:w-96 relative">

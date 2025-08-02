@@ -20,6 +20,7 @@ class SchoolsList extends Component
 
     public $regionFilter = 1; // Filter by region
     public $provinceFilter = 1; // Filter by province
+    public $genderFilter = 1; // Filter by gender
 
     public $term = '';
     public string $sortField = 'id'; // Default field
@@ -141,6 +142,9 @@ class SchoolsList extends Component
             )
             ->when($this->provinceFilter, fn($q) =>
                 $q->where('province_id', $this->provinceFilter)
+            )
+            ->when($this->genderFilter, fn($q) =>
+                $q->where('educational_gender', $this->genderFilter)
             )
             ->orderBy($this->sortField, $this->sortDirection)
             ->latest('created_at')
