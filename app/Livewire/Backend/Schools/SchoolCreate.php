@@ -80,29 +80,25 @@ class SchoolCreate extends Component
     public function getManagersProperty()
     {
         if (!$this->province_id) {
-            // إذا لم يتم تحديد محافظة، نرجع فقط المدير الحالي (إن وجد)
-            return $this->school_manager_user_id 
-                ? User::where('id', $this->school_manager_user_id)->pluck('name', 'id')
-                : collect();
+            return collect(); // في الإنشاء، نرجع قائمة فارغة إذا لم تختر محافظة
         }
 
         return User::whereHas('provinces', fn($q) => $q->where('province_id', $this->province_id))
             ->where('user_type', 'school_manager')
+            ->orderBy('name') // ترتيب النتائج حسب الاسم
             ->pluck('name', 'id');
-    }
+        }
 
     // للمعلمين (teacher)
     public function getTeachersProperty()
     {
         if (!$this->province_id) {
-            // إذا لم يتم تحديد محافظة، نرجع فقط المعلم الحالي (إن وجد)
-            return $this->gifted_teacher_user_id 
-                ? User::where('id', $this->gifted_teacher_user_id)->pluck('name', 'id')
-                : collect();
+            return collect(); // في الإنشاء، نرجع قائمة فارغة إذا لم تختر محافظة
         }
 
         return User::whereHas('provinces', fn($q) => $q->where('province_id', $this->province_id))
             ->where('user_type', 'teacher')
+            ->orderBy('name') // ترتيب النتائج حسب الاسم
             ->pluck('name', 'id');
     }
 
