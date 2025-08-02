@@ -23,6 +23,7 @@ class AdminSeeder extends Seeder
             'education_region_id' => 1, // ربط المستخدم بالمنطقة التعليمية الأولى
             'password'          => bcrypt('123123123'),
             'email_verified_at' => now(),
+            'user_type'         => 'supervisor', // تعيين نوع المستخدم كمشرف
             'status'            => 1,  
         ]);
 

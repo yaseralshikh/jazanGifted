@@ -14,7 +14,7 @@ class RegionEdit extends Component
     public $status;
 
     protected $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:education_regions,name,{regionId}',
         'status' => 'required|boolean',
     ];
 

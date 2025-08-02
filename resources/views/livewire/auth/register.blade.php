@@ -21,6 +21,7 @@ new #[Layout('components.layouts.auth')] class extends Component
     public string $national_id = '';
     public string $phone = '';
     public string $gender = '';
+    public string $user_type = '';
 
     // الربط بالمنطقة والمحافظة
     public int $education_region_id = 0;
@@ -71,13 +72,15 @@ new #[Layout('components.layouts.auth')] class extends Component
             'education_region_id'   => ['required', 'exists:education_regions,id'],
             'province_id'           => ['required', 'exists:provinces,id'],
             'gender'                => ['required', 'in:male,female'],
+            'user_type'             => ['required', 'in:student,teacher,school_manager,supervisor'],
             'password'              => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
+
         event(new Registered(($user)));
-        $user->addRole('user');
+        $user->addRole($validated['user_type']);
         $user->provinces()->attach($validated['province_id']);
         Auth::login($user);
 
@@ -233,17 +236,26 @@ new #[Layout('components.layouts.auth')] class extends Component
             </flux:select>
         </div>
         <div>
-            <flux:input wire:model="password" :label="__('Password')" type="password" required autocomplete="new-password" :placeholder="__('Password')" viewable />
-        </div>
-        <div>
-            <flux:input wire:model="password_confirmation" :label="__('Confirm password')" type="password" required autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
-        </div>
-        <div>
             <flux:select wire:model="gender" :label="__('Gender')" required>
                 <option value="">{{ __('Select gender') }}</option>
                 <option value="male">{{ __('Male') }}</option>
                 <option value="female">{{ __('Female') }}</option>
             </flux:select>
+        </div>
+        <div>
+            <flux:select wire:model="user_type" :label="__('User Type')" required>
+                <option value="">{{ __('Select user type') }}</option>
+                <option value="student">{{ __('Student') }}</option>
+                <option value="teacher">{{ __('Teacher') }}</option>
+                <option value="school_manager">{{ __('School Manager') }}</option>
+                <option value="supervisor">{{ __('Supervisor') }}</option>
+            </flux:select>
+        </div>
+        <div>
+            <flux:input wire:model="password" :label="__('Password')" type="password" required autocomplete="new-password" :placeholder="__('Password')" viewable />
+        </div>
+        <div>
+            <flux:input wire:model="password_confirmation" :label="__('Confirm password')" type="password" required autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
         </div>
         <div class="md:col-span-2">
             <flux:button type="submit" variant="primary" class="w-full">

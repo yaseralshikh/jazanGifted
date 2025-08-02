@@ -32,6 +32,7 @@ class User extends Authenticatable implements LaratrustUser
         'gender',
         'education_region_id', // ربط المستخدم بالمنطقة التعليمية
         'password',
+        'user_type', // نوع المستخدم (طالب، معلم، مدير مدرسة، مشرف)
         'status',
     ];
 
@@ -97,9 +98,9 @@ class User extends Authenticatable implements LaratrustUser
         return $this->hasOne(GiftedTeacher::class);
     }
 
-    public function principalOfSchool()
+    public function managerOfSchool()
     {
-        return $this->hasOne(School::class, 'principal_user_id');
+        return $this->hasOne(School::class, 'school_manager_user_id');
     }
 
     public function teacherOfSchool()

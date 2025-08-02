@@ -15,7 +15,7 @@ class ProvinceEdit extends Component
     public $status;
 
     protected $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:provinces,name,{provinceId}',
         'education_region_id' => 'required|exists:education_regions,id',
         'status' => 'required|boolean',
     ];

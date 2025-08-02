@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('user_type', ['student', 'teacher', 'school_manager', 'supervisor']);
             $table->unsignedTinyInteger('status')->default(0);
             $table->rememberToken();
             $table->timestamps();

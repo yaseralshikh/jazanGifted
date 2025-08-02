@@ -10,10 +10,11 @@ class School extends Model
         'name',
         'province_id',
         'educational_stage',
+        'educational_type',
+        'educational_gender',
         'ministry_code',
-        'principal_user_id',
+        'school_manager_user_id',
         'gifted_teacher_user_id',
-        'gender',
         'status',
     ];
 
@@ -27,9 +28,9 @@ class School extends Model
         return $this->hasMany(Student::class);
     }
 
-    public function principal()
+    public function schoolManager()
     {
-        return $this->belongsTo(User::class, 'principal_user_id');
+        return $this->belongsTo(User::class, 'school_manager_user_id');
     }
 
     public function giftedTeacher()

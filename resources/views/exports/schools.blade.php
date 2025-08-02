@@ -102,20 +102,32 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>المحافظة</th>
-                    <th>المنطقة التعليمية</th>
-                    <th>الحالة</th>
+                    <th>Name</th>
+                    <th>Province</th>
+                    <th>Educational stage</th>
+                    <th>Educational type</th>
+                    <th>Educational gender</th>
+                    <th>Ministry code</th>
+                    <th>School Manager</th>
+                    <th>Gifted teacher</th>
+                    <th>status</th>
                 </tr>
             </thead>
             <tbody>
                 @php $i = 1; @endphp
-                @foreach($data as $province)
+                @foreach($data as $school)
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td>{{ $province->name }}</td>
-                        <td>{{ $province->educationRegion->name }}</td>
+                        <td>{{ $school->name }}</td>
+                        <td>{{ $school->province->name }}</td>
+                        <td>{{ $school->educational_stage }}</td>
+                        <td>{{ $school->educational_type }}</td>
+                        <td>{{ $school->educational_gender }}</td>
+                        <td>{{ $school->ministry_code }}</td>
+                        <td>{{ $school->school_manager_user_id }}</td>
+                        <td>{{ $school->gifted_teacher_user_id }}</td>
                         <td>
-                            @if($province->status)
+                            @if($school->status)
                                 <span class="text-green-600">نشط</span>
                             @else
                                 <span class="text-gray-600">غير نشط</span>      

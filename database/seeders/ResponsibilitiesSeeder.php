@@ -23,7 +23,7 @@ class ResponsibilitiesSeeder extends Seeder
             ],
             [
                 'title' => 'مدير مدرسة',
-                'code' => 'school_principal',
+                'code' => 'school_manager',
                 'description' => 'متابعة الطلبة وتقييم البرامج داخل المدرسة.',
                 'scope_type' => 'school',
                 'scope_id' => null,

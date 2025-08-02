@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('province_id')->constrained()->onDelete('cascade');
             $table->enum('educational_stage', ['kindergarten','primary','middle','secondary','complex']);
+            $table->enum('educational_type', ['governmental', 'private', 'international', 'complex']);
+            $table->enum('educational_gender', ['male', 'female']);
             $table->string('ministry_code');
-            $table->foreignId('principal_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('school_manager_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('gifted_teacher_user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->enum('gender', ['male', 'female']);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });

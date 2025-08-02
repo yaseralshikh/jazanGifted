@@ -36,11 +36,11 @@ return [
             'programs' => 'c,r,u,d',
             'profile' => 'r,u',
         ],
-        'gifted_teacher' => [
+        'school_manager' => [
             'students' => 'r,u',
             'profile' => 'r,u',
         ],
-        'principal' => [
+        'teacher' => [
             'schools' => 'r',
             'students' => 'r,u',
             'profile' => 'r,u',
@@ -49,9 +49,6 @@ return [
             'programs' => 'r',
             'profile' => 'r,u',
         ],
-        'user' => [
-            'profile' => 'r,u',
-        ]
     ],
 
     'permissions_map' => [
