@@ -47,7 +47,6 @@ class SchoolCreate extends Component
     {
         $this->validate();
 
-
         School::create([
             'name' => $this->name,
             'ministry_code' => $this->ministry_code,
@@ -67,22 +66,53 @@ class SchoolCreate extends Component
 
     }
 
-    public function render()
+    public function getProvincesProperty()
     {
-        $regions = EducationRegion::pluck('name', 'id')->toArray();
-        $provinces = Province::where('education_region_id', $this->education_region_id)->pluck('name', 'id')->toArray();
-        $users = User::where('education_region_id', $this->education_region_id)
-            ->whereHas('provinces', function ($query) {
-                $query->where('province_id', $this->province_id);
-            })
-            ->pluck('name', 'id')
-            ->toArray();
-  
+        if (!$this->education_region_id) {
+            return Province::where('id', $this->province_id)->pluck('name', 'id');
+        }
         
+        return Province::where('education_region_id', $this->education_region_id)
+            ->pluck('name', 'id');
+    }
+
+    // للمديرين (school_manager)
+    public function getManagersProperty()
+    {
+        if (!$this->province_id) {
+            // إذا لم يتم تحديد محافظة، نرجع فقط المدير الحالي (إن وجد)
+            return $this->school_manager_user_id 
+                ? User::where('id', $this->school_manager_user_id)->pluck('name', 'id')
+                : collect();
+        }
+
+        return User::whereHas('provinces', fn($q) => $q->where('province_id', $this->province_id))
+            ->where('user_type', 'school_manager')
+            ->pluck('name', 'id');
+    }
+
+    // للمعلمين (teacher)
+    public function getTeachersProperty()
+    {
+        if (!$this->province_id) {
+            // إذا لم يتم تحديد محافظة، نرجع فقط المعلم الحالي (إن وجد)
+            return $this->gifted_teacher_user_id 
+                ? User::where('id', $this->gifted_teacher_user_id)->pluck('name', 'id')
+                : collect();
+        }
+
+        return User::whereHas('provinces', fn($q) => $q->where('province_id', $this->province_id))
+            ->where('user_type', 'teacher')
+            ->pluck('name', 'id');
+    }
+
+    public function render()
+    {        
         return view('livewire.backend.schools.school-create', [
-            'regions' => $regions,
-            'provinces' => $provinces,
-            'users' => $users,
+            'regions' => EducationRegion::pluck('name', 'id'),
+            'provinces' => $this->provinces,
+            'managers' => $this->managers,
+            'teachers' => $this->teachers
         ]);
     }
 }

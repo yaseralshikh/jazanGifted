@@ -56,7 +56,7 @@
                 <div>
                     <flux:select wire:model="school_manager_user_id" wire:change="$refresh" label="School Manager User" searchable>
                         <option value="">Select school manager user</option>
-                        @foreach($users as  $id => $name)
+                        @foreach($this->managers as  $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </flux:select>
@@ -65,7 +65,7 @@
                 <div>
                     <flux:select wire:model="gifted_teacher_user_id" wire:change="$refresh" label="Gifted Teacher user" searchable>
                         <option value="">Select gifted teacher user</option>
-                        @foreach($users as  $id => $name)
+                        @foreach($this->teachers as  $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </flux:select>

@@ -143,55 +143,6 @@ class SchoolEdit extends Component
             ->pluck('name', 'id');
     }
 
-    // public function getUsersProperty()
-    // {
-    //     if (!$this->province_id) {
-    //         return User::whereIn('id', [
-    //             $this->school_manager_user_id,
-    //             $this->gifted_teacher_user_id
-    //         ])->pluck('name', 'id');
-    //     }
-
-    //     // للمديرين (school_manager_user_id)
-    //     if (request()->has('for_manager')) {
-    //         return User::whereHas('provinces', function($query) {
-    //                 $query->where('province_id', $this->province_id);
-    //             })
-    //             ->where('user_type', 'manager') // أو أي قيمة تمثل المديرين في نظامك
-    //             ->pluck('name', 'id');
-    //     }
-
-    //     // للمعلمين الموهوبين (gifted_teacher_user_id)
-    //     if (request()->has('for_teacher')) {
-    //         return User::whereHas('provinces', function($query) {
-    //                 $query->where('province_id', $this->province_id);
-    //             })
-    //             ->where('user_type', 'teacher') // أو أي قيمة تمثل المعلمين في نظامك
-    //             ->pluck('name', 'id');
-    //     }
-
-    //     // الإفتراضي: جميع المستخدمين (يمكن حذف هذا الجزء إذا لم يكن مطلوباً)
-    //     return User::whereHas('provinces', function($query) {
-    //             $query->where('province_id', $this->province_id);
-    //         })
-    //         ->pluck('name', 'id');
-    // }
-
-    // public function getUsers($filters = [])
-    // {
-    //     $query = User::whereHas('provinces', function($query) {
-    //         $query->where('province_id', $this->province_id);
-    //     });
-
-    //     if (isset($filters['for_manager'])) {
-    //         $query->where('user_type', 'school_manager');
-    //     } elseif (isset($filters['for_teacher'])) {
-    //         $query->where('user_type', 'teacher');
-    //     }
-
-    //     return $query->pluck('name', 'id');
-    // }
-
     public function render()
     {
         return view('livewire.backend.schools.school-edit', [
