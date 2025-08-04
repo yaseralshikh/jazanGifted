@@ -4,6 +4,8 @@
 
         {{-- for show Edit modal --}}
         <livewire:backend.users.user-edit />
+        {{-- for show User Form modal --}}
+        <livewire:backend.users.user-form />
 
         {{-- for show Delete modal --}}
         <flux:modal name="delete-user" class="min-w-[22rem]">
@@ -12,7 +14,8 @@
                     <flux:heading size="lg">Delete user?</flux:heading>
                     <flux:text class="mt-2">
                         <p>You're about to delete this user.</p>
-                        <p>This action cannot be reversed.</p>
+                        <p class="text-sm text-red-500">سيتم حذف بياناته المرتبطة بالكامل.</p>
+                        <p class="text-sm text-red-500">This action cannot be reversed.</p>
                     </flux:text>
                 </div>
                 <div class="flex gap-2">
@@ -29,20 +32,35 @@
         <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
             <div class="flex flex-row justify-start items-center gap-4 mb-4">
                 {{-- button for create user --}}
-                <flux:modal.trigger name="create-user">
+                {{-- <flux:modal.trigger name="create-user">
                     @permission('users-create')
-                        <flux:button variant="primary" class="flex items-center gap-2">
-                            <flux:icon.plus class="w-4 h-4" />
-                            Create user
-                        </flux:button>
+                    <flux:button wire:click="$dispatch('createUser')" variant="primary" class="flex items-center gap-2">
+                        <flux:icon.plus class="w-4 h-4" />
+                        Create user
+                    </flux:button>
                     @else
                         <flux:button variant="subtle" class="flex items-center gap-2" disabled>
                             <flux:icon.plus class="w-4 h-4" />
                             Create user
                         </flux:button>
                     @endpermission
+                </flux:modal.trigger> --}}
+                {{-- button for Create User --}}
+                <flux:modal.trigger name="create-user">
+                    @permission('users-create')
+                    <flux:button wire:click="$dispatch('createUser')" variant="primary" class="flex items-center gap-2">
+                        <flux:icon.plus class="w-4 h-4" />
+                        Create user
+                    </flux:button>
+                    @else
+                    <flux:button variant="subtle" class="flex items-center gap-2" disabled>
+                        <flux:icon.plus class="w-4 h-4" />
+                        Create user
+                    </flux:button>
+                    @endpermission
                 </flux:modal.trigger>
 
+                {{-- button for Export --}}
                 <div class="flex items-center gap-2">
                     {{-- زر تصدير Excel --}}
                     <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
@@ -55,7 +73,7 @@
                     </x-button>
 
                     {{-- total users --}}
-                    <span class="ml-2 text-sm text-gray-500">Total Regions: ({{ isset($users) ? $users->count() : 0 }})</span>                    </div>
+                    <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($users) ? $users->count() : 0 }})</span>                    </div>
             </div>
 
             {{-- Filters --}}
@@ -135,7 +153,8 @@
                         </td>
                         <td class="px-6 py-2 space-x-1">
                             @permission('users-update')
-                                <flux:button variant="primary" size="sm" wire:click="edit({{ $user->id }})">Edit</flux:button>
+                                {{-- <flux:button variant="primary" size="sm" wire:click="edit({{ $user->id }})">Edit</flux:button> --}}
+                                <flux:button variant="primary" size="sm" wire:click="$dispatch('editUser', { id: {{ $user->id }} })">Edit</flux:button>
                             @else
                                 <flux:button variant="subtle" size="sm" disabled>Edit</flux:button>
                             @endpermission  
