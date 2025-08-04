@@ -22,6 +22,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:su
     // Admin Schools
     Route::view('schools', 'livewire.backend.schools.schools')
         ->name('schools');
+    // Admin Users
+    Route::view('users', 'livewire.backend.users.users')
+        ->name('users');
 });
 
 Route::middleware(['auth'])->group(function () {
