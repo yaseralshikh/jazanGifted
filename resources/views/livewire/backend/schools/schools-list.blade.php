@@ -158,8 +158,8 @@
                         <td class="px-6 py-2 text-gray-700">{{ $school->educational_stage }}</td>
                         <td class="px-6 py-2 text-gray-700">{{ $school->educational_type }}</td>
                         <td class="px-6 py-2 text-gray-700">{{ $school->educational_gender }}</td>
-                        <td class="px-6 py-2 text-gray-700">{{ $school->schoolManager->name}}</td>
-                        <td class="px-6 py-2 text-gray-700">{{ $school->giftedTeacher->name }}</td>
+                        <td class="px-6 py-2 {{ $school->schoolManager === Null ? 'text-red-700 dark:text-red-700' : 'text-gray-700' }}">{{ $school->schoolManager === Null ? 'No one' : $school->schoolManager->name }}</td>
+                        <td class="px-6 py-2 {{ $school->schoolManager === Null ? 'text-red-700 dark:text-red-700' : 'text-gray-700' }}">{{ $school->giftedTeacher === null ? 'No one' : $school->giftedTeacher->name }}</td>
                         <td class="px-6 py-2 text-gray-700">{{ $school->province->name }}</td>
                         <td class="px-6 py-2 ">
                             {{-- حالة المنطقة التعليمية --}}

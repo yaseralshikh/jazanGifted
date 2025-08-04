@@ -58,9 +58,7 @@
                     <span class="ml-2 text-sm text-gray-500">Total Regions: ({{ isset($users) ? $users->count() : 0 }})</span>                    </div>
             </div>
 
-            {{-- loading search --}}
-            <div wire:loading.delay wire:target="term" dir="rtl" class="text-sm text-gray-500 mt-1">جاري البحث...</div>
-            
+            {{-- Filters --}}
             <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-50">
                 <option value="">All Regions</option>
                 @foreach($regions as $region)
@@ -74,17 +72,18 @@
                 @endforeach
             </flux:select>
             <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-50">
-                <option value="">All Gender</option>
-                <option value="male">Mail</option>
-                <option value="'female">Female</option>
+                @foreach($genderOptions as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
             </flux:select>
             <flux:select wire:model="userTypeFilter" wire:change="$refresh" class="md:w-50">
-                <option value="">All user type</option>
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="school_manager">School manager</option>
-                <option value="supervisor">Supervisor</option>
+                @foreach ($userTypeOptions as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
             </flux:select>
+
+            {{-- loading search --}}
+            <div wire:loading.delay wire:target="term" dir="rtl" class="text-sm text-gray-500 mt-1">جاري البحث...</div>
 
             {{-- زر البحث --}}
             <div class="w-full md:w-96 relative">

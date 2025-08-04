@@ -64,9 +64,16 @@ class UsersList extends Component
     public function destroy()
     {
         $user = User::find($this->userId);
+        // حذف العلاقات المرتبطة
+        $user->student()?->delete();              // جدول students
+        $user->supervisor()?->delete();           // جدول supervisors
+        $user->giftedTeacher()?->delete();        // جدول gifted_teachers
+        $user->provinces()->detach();             // pivot table
+        $user->roles()->detach();                 // laratrust roles
+        // حذف المستخدم
         $user->delete();
         // إذا كان هناك علاقة مع نموذج آخر، يمكنك حذفها هنا
-        $user->roles()->detach();
+        //$user->roles()->detach();
         
         $this->reset(['userId']);
         $this->dispatch('reloadUsers'); // إذا كنت تحتاج تحديث القائمة
@@ -145,18 +152,26 @@ class UsersList extends Component
     {
         return User::query()
             ->when($this->term, fn($q) =>
-                $q->where('name', 'like', '%' . $this->term . '%')
-                ->orWhere('national_id', 'like', '%' . $this->term . '%')
+                $q->where('name', 'like', "%{$this->term}%")
+                    ->orWhere('email', 'like', "%{$this->term}%")
+                    ->orWhere('national_id', 'like', "%{$this->term}%")
+            )
+            ->when($this->userTypeFilter, fn($q) =>
+                $q->where('user_type', $this->userTypeFilter)
+            )
+            ->when($this->genderFilter, fn($q) =>
+                $q->where('gender', $this->genderFilter)
             )
             ->when($this->regionFilter, fn($q) =>
                 $q->where('education_region_id', $this->regionFilter)
             )
-            ->whereHas('provinces', function($q) {
-                $q->where('provinces.id', 1); // or 'province_user.id' depending on your needs
-            })
+            ->when($this->provinceFilter, fn($q) =>
+                $q->whereHas('provinces', fn($q) =>
+                    $q->where('province_id', $this->provinceFilter)
+                )
+            )
             ->orderBy($this->sortField, $this->sortDirection)
-            ->latest('created_at')
-            ->paginate(25);
+            ->paginate(20);
     }
 
     public function getRegionsProperty()
@@ -176,18 +191,19 @@ class UsersList extends Component
     public function getGenderOptionsProperty()
     {
         return [
-            '' => 'All',
-            'mael' => 'mail',
-            'femaul' => 'Femaile',
+            '' => 'All Gender',
+            'male' => 'Mael',
+            'female' => 'Female',
         ];
     } 
+    
     public function getUserTypeOptionsProperty()
     {
         return [
             '' => 'All user type',
             'student' => 'Student',
             'teacher' => 'Teacher',
-            'user_manager' => 'User manager',
+            'school_manager' => 'User manager',
             'supervisor' => 'Supervisor',
         ];
     }

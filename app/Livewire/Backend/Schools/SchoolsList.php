@@ -19,8 +19,8 @@ class SchoolsList extends Component
     public $schoolId;
 
     public $regionFilter = 1; // Filter by region
-    public $provinceFilter = 1; // Filter by province
-    public $genderFilter = 1; // Filter by gender
+    public $provinceFilter = ""; // Filter by province
+    public $genderFilter = ""; // Filter by gender
 
     public $term = '';
     public string $sortField = 'id'; // Default field
