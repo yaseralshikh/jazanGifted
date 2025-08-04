@@ -56,6 +56,11 @@
             .table-content th {
                 background-color: #eee;
             }
+
+            thead { display: table-header-group; }
+            tfoot { display: table-row-group; }
+            thead tr { page-break-inside: avoid; page-break-after: auto; }
+
             @page {
                 footer: html_myFooter;
             }
@@ -104,6 +109,11 @@
                     <th>#</th>
                     <th>name</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>National Id</th>
+                    <th>Region</th>
+                    <th>Province</th>
+                    <th>Gender</th>
                     <th>User type</th>
                     <th>ٍStatus</th>
                 </tr>
@@ -115,12 +125,17 @@
                         <td>{{ $i++ }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->phone }}</td>
+                        <td>{{ $user->national_id}}</td>
+                        <td>{{ $user->educationRegion->name}}</td>
+                        <td>{{ $user->provinces->pluck('name')->join(', ')}}</td>
+                        <td>{{ $user->gender}}</td>
                         <td>{{ $user->user_type }}</td>
                         <td>
                             @if($user->status)
-                                <span class="text-green-600">نشط</span>
+                                <span class="text-green-600">Active</span>
                             @else
-                                <span class="text-gray-600">غير نشط</span>      
+                                <span class="text-gray-600">Disactive</span>      
                             @endif
                         </td>
                     </tr>

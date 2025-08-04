@@ -1,9 +1,4 @@
 <div class="p-4">
-        {{-- for show Create modal --}}
-        <livewire:backend.users.user-create />
-
-        {{-- for show Edit modal --}}
-        <livewire:backend.users.user-edit />
         {{-- for show User Form modal --}}
         <livewire:backend.users.user-form />
 
@@ -31,20 +26,6 @@
         {{-- for Create & Search button --}}
         <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
             <div class="flex flex-row justify-start items-center gap-4 mb-4">
-                {{-- button for create user --}}
-                {{-- <flux:modal.trigger name="create-user">
-                    @permission('users-create')
-                    <flux:button wire:click="$dispatch('createUser')" variant="primary" class="flex items-center gap-2">
-                        <flux:icon.plus class="w-4 h-4" />
-                        Create user
-                    </flux:button>
-                    @else
-                        <flux:button variant="subtle" class="flex items-center gap-2" disabled>
-                            <flux:icon.plus class="w-4 h-4" />
-                            Create user
-                        </flux:button>
-                    @endpermission
-                </flux:modal.trigger> --}}
                 {{-- button for Create User --}}
                 <flux:modal.trigger name="create-user">
                     @permission('users-create')

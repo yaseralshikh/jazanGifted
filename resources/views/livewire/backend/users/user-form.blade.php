@@ -44,8 +44,8 @@
                     <option value="gifted_manager">Gifted Manager</option>
                 </flux:select>
 
-                <flux:input wire:model.defer="form.password" label="Password" type="password" placeholder="Option for new user or update" />
-                <flux:input wire:model.defer="form.password_confirmation" label="Password confirmation" type="password"/>
+                <flux:input wire:model.defer="form.password" label="Password" type="password" placeholder="Option for new user or update" viewable/>
+                <flux:input wire:model.defer="form.password_confirmation" label="Password confirmation" type="password" viewable/>
                 
                 <flux:select wire:model.defer="form.status" label="Status">
                     <option value="1">Active</option>

@@ -13,15 +13,21 @@ class UsersExport
         $sheet = $spreadsheet->getActiveSheet();
 
         // رؤوس الأعمدة
-        $sheet->getStyle('A1:C1')->getFill()->setFillType('solid')->getStartColor()->setRGB('FFFF00');
-        $sheet->getStyle('A1:C1')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('A1:C1')->getAlignment()->setVertical('center');
-        $sheet->getStyle('A1:C1')->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle('A1:I1')->getFill()->setFillType('solid')->getStartColor()->setRGB('FFFF00');
+        $sheet->getStyle('A1:I1')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A1:I1')->getAlignment()->setVertical('center');
+        $sheet->getStyle('A1:I1')->getFont()->setBold(true)->setSize(12);
         $sheet->setCellValue('A1', 'Name');
-        $sheet->setCellValue('B1', 'Province');
-        $sheet->setCellValue('C1', 'Status');
+        $sheet->setCellValue('B1', 'Email');
+        $sheet->setCellValue('C1', 'Phone');
+        $sheet->setCellValue('D1', 'National_id');
+        $sheet->setCellValue('E1', 'Region');
+        $sheet->setCellValue('F1', 'Provinces');
+        $sheet->setCellValue('G1', 'Gender');
+        $sheet->setCellValue('H1', 'User Type');
+        $sheet->setCellValue('I1', 'Status');
         // حجم الأعمدة
-        foreach (range('A', 'C') as $col) {
+        foreach (range('A', 'I') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
@@ -34,8 +40,14 @@ class UsersExport
 
         foreach ($data as $user) {
             $sheet->setCellValue("A{$row}", $user->name);
-            $sheet->setCellValue("B{$row}", $user->province->name);
-            $sheet->setCellValue("C{$row}", $user->status ? 'Active' : 'Inactive');
+            $sheet->setCellValue("B{$row}", $user->email);
+            $sheet->setCellValue("C{$row}", $user->phone);
+            $sheet->setCellValue("D{$row}", $user->national_id);
+            $sheet->setCellValue("E{$row}", $user->educationRegion->name);
+            $sheet->setCellValue("F{$row}", $user->provinces->pluck('name')->join(', '));
+            $sheet->setCellValue("G{$row}", $user->gender);
+            $sheet->setCellValue("H{$row}", $user->user_type);
+            $sheet->setCellValue("I{$row}", $user->status ? 'Active' : 'Inactive');
             $row++;
         }
 

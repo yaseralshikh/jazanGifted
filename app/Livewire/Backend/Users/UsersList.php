@@ -84,7 +84,7 @@ class UsersList extends Component
 
     public function exportExcel()
     {
-        $data = User::query()
+        $data = User::query()->with('provinces')
             ->when($this->term, fn($q) =>
                 $q->where('name', 'like', '%' . $this->term . '%')
                 ->orWhere('national_id', 'like', '%' . $this->term . '%')
@@ -94,13 +94,13 @@ class UsersList extends Component
             )
             ->when($this->provinceFilter, fn($q) =>
                 $q->whereHas('provinces', fn($subQuery) =>
-                    $subQuery->where('id', $this->provinceFilter)
+                    $subQuery->where('provinces.id', $this->provinceFilter)
                 )
             )
             ->orderBy($this->sortField, $this->sortDirection)
             ->latest('created_at')
             ->get();
-                
+     
         // إنشاء الملف وإرجاع اسمه
         $export = new UsersExport();
         $file = $export->export($data); // نمرر البيانات هنا
@@ -122,7 +122,7 @@ class UsersList extends Component
             )
             ->when($this->provinceFilter, fn($q) =>
                 $q->whereHas('provinces', fn($subQuery) =>
-                    $subQuery->where('id', $this->provinceFilter)
+                    $subQuery->where('provinces.id', $this->provinceFilter)
                 )
             )
             ->orderBy($this->sortField, $this->sortDirection)
