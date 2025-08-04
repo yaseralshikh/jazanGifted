@@ -26,6 +26,7 @@ class UserForm extends Component
         'province_id' => '',
         'user_type' => '',
         'password' => '',
+        'password_confirmation' => '',
         'status' => true,
     ];
 
@@ -44,6 +45,7 @@ class UserForm extends Component
             'form.education_region_id' => ['required', 'exists:education_regions,id'],
             'form.user_type' => ['required', 'in:student,teacher,admin,supervisor,school_manager'],
             'form.status' => ['required', 'boolean'],
+            'form.password' => $this->userId ? ['nullable', 'min:8'] : ['required', 'min:8', 'confirmed'],
         ];
     }
 
