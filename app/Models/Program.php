@@ -42,6 +42,11 @@ class Program extends Model
         return $this->hasMany(ProgramReport::class);
     }
 
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
     public function supervisors()
     {
         return $this->belongsToMany(Supervisor::class, 'program_supervisors')

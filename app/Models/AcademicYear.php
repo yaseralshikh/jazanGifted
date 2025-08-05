@@ -22,4 +22,10 @@ class AcademicYear extends Model
     {
         return $this->hasMany(VisitReport::class);
     }
+
+    public function programs()
+    {
+        return $this->hasMany(Program::class);
+    }
+
 }

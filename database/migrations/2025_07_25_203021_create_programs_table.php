@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->foreignId('province_id')->constrained()->onDelete('cascade');
             $table->foreignId('manager_id')->constrained('supervisors')->onDelete('cascade');
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade');
             $table->boolean('allow_self_registration')->default(false);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();

@@ -1,0 +1,720 @@
+class AcademicYear extends Model
+{
+    protected $fillable = [
+        'name',
+        'start_date',
+        'end_date',
+        'status',
+    ];
+
+    public function studentRecords()
+    {
+        return $this->hasMany(StudentAcademicRecord::class);
+    }
+
+    public function visitReports()
+    {
+        return $this->hasMany(VisitReport::class);
+    }
+
+    public function programs()
+    {
+        return $this->hasMany(Program::class);
+    }
+
+}
+
+
+class AdministrativeRole extends Model
+{
+    protected $fillable = [
+        'name',
+        'code',
+        'description',
+        'status',
+    ];
+
+    public function supervisors()
+    {
+        return $this->hasMany(Supervisor::class);
+    }
+}
+
+
+class EducationRegion extends Model
+{
+    protected $fillable =[
+        'name',
+        'status',
+    ];
+
+    public function provinces()
+    {
+        return $this->hasMany(Province::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+
+
+class GiftedTeacher extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'school_id',
+        'specialization_id',
+        'academic_qualification',
+        'experience_years',
+        'assigned_at',
+        'status',
+        'notes',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function specialization()
+    {
+        return $this->belongsTo(Specialization::class);
+    }
+}
+
+
+class Program extends Model
+{
+    protected $fillable = [
+        'title',
+        'start_date',
+        'end_date',
+        'description',
+        'province_id',
+        'manager_id',
+        'allow_self_registration',
+        'status',
+    ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(Supervisor::class, 'manager_id');
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+
+    public function nominations()
+    {
+        return $this->hasMany(ProgramNomination::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(ProgramReport::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function supervisors()
+    {
+        return $this->belongsToMany(Supervisor::class, 'program_supervisors')
+                    ->using(ProgramSupervisor::class)
+                    ->withTimestamps();
+    }
+}
+
+
+class ProgramIndicator extends Model
+{
+    protected $fillable = [
+        'program_id',
+        'title',
+        'type',
+        'target_value',
+        'is_required',
+    ];
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(ProgramIndicatorProgress::class);
+    }
+}
+
+
+class ProgramIndicatorProgress extends Model
+{
+    protected $fillable = [
+        'program_indicator_id',
+        'supervisor_id',
+        'achieved_value',
+        'progress_date',
+        'note',
+        'is_completed',
+    ];
+
+    public function programIndicator()
+    {
+        return $this->belongsTo(ProgramIndicator::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Supervisor::class);
+    }
+}
+
+
+class ProgramNomination extends Model
+{
+    protected $fillable = [
+        'program_id',
+        'student_id',
+        'nominated_by',
+        'status',
+        'note',
+    ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function nominator()
+    {
+        return $this->belongsTo(User::class, 'nominated_by');
+    }
+}
+
+
+class ProgramRegistration extends Model
+{
+    protected $fillable = [
+        'student_id',
+        'program_id',
+        'registered_at',
+        'status',
+        'evaluation',
+        'certificate_url',
+    ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+}
+
+
+class ProgramReport extends Model
+{
+    protected $fillable = [
+        'program_id',
+        'report_date',
+        'summary',
+        'attendees_count',
+        'achievements',
+        'evaluation',
+    ];
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+}
+
+
+class ProgramSupervisor extends Pivot
+{
+    protected $table = 'program_supervisors';
+
+    protected $fillable = [
+        'program_id',
+        'supervisor_id',
+        'is_lead',
+        'assigned_at',
+    ];
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Supervisor::class);
+    }
+}
+
+
+class Province extends Model
+{
+    protected $fillable = ['name', 'education_region_id', 'status'];
+
+    public function educationRegion()
+    {
+        return $this->belongsTo(EducationRegion::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'province_user')->withTimestamps();
+    }
+
+    public function schools()
+    {
+        return $this->hasMany(School::class);
+    }
+
+    public function supervisors()
+    {
+        return $this->belongsToMany(Supervisor::class, 'province_supervisor')->withTimestamps();
+    }
+}
+
+
+class Responsibility extends Model
+{
+    protected $fillable = [
+        'title',
+        'code',
+        'description',
+        'status',
+        'scope_type',
+        'scope_id',
+    ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'responsibility_user')->withTimestamps();
+    }    
+}
+
+
+
+class School extends Model
+{
+    protected $fillable = [
+        'name',
+        'province_id',
+        'educational_stage',
+        'educational_type',
+        'educational_gender',
+        'ministry_code',
+        'school_manager_user_id',
+        'gifted_teacher_user_id',
+        'status',
+    ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function schoolManager()
+    {
+        return $this->belongsTo(User::class, 'school_manager_user_id');
+    }
+
+    public function giftedTeacher()
+    {
+        return $this->belongsTo(User::class, 'gifted_teacher_user_id');
+    }
+
+    public function visitReports()
+    {
+        return $this->hasMany(VisitReport::class);
+    }    
+}
+
+
+
+class Specialization extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+        'status',
+    ];
+
+    public function giftedTeachers()
+    {
+        return $this->hasMany(GiftedTeacher::class);
+    }
+
+    public function scopeable()
+    {
+        return $this->morphTo(__FUNCTION__, 'scope_type', 'scope_id');
+    }
+}
+
+
+
+class Student extends Model
+{
+    protected $fillable = [
+        'birth_date',
+        'school_id',
+        'user_id',
+        'talent_score_1',
+        'talent_score_2',
+        'talent_score_3',
+        'year__score_1',
+        'year__score_2',
+        'year__score_3',
+        'talent_type',
+        'note',
+        'status',
+    ];
+
+    // الطالب مرتبط بالمستخدم الأساسي
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // المدرسة التي ينتمي لها الطالب
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    // سجل أكاديمي حسب السنوات
+    public function academicRecords()
+    {
+        return $this->hasMany(StudentAcademicRecord::class);
+    }
+
+    // تسجيل في برامج
+    public function programRegistrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+
+    // ترشيحات البرامج
+    public function programNominations()
+    {
+        return $this->hasMany(ProgramNomination::class);
+    }
+}
+
+
+
+class StudentAcademicRecord extends Model
+{
+    protected $fillable = [
+        'student_id',
+        'academic_year_id',
+        'school_id',
+        'grade',
+        'stage',
+        'talent_score',
+        'talent_type',
+        'promoted',
+        'transferred',
+        'note',
+    ];
+
+    public const GRADES = [
+        'KG1', 'KG2',
+        'G1', 'G2', 'G3', 'G4', 'G5', 'G6',
+        'G7', 'G8', 'G9',
+        'G10', 'G11', 'G12'
+    ];
+
+    public const STAGES = ['kindergarten', 'primary', 'middle', 'secondary'];
+
+    public const TALENT_TYPES = ['promising', 'talented', 'exceptionally_talented'];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+}
+
+
+
+class Supervisor extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'administrative_role_id',
+        'status',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function administrativeRole()
+    {
+        return $this->belongsTo(AdministrativeRole::class);
+    }
+
+    public function provinces()
+    {
+        // العلاقة pivot من جدول province_supervisor
+        return $this->belongsToMany(Province::class, 'province_supervisor')->withTimestamps();
+    }
+
+    public function programs()
+    {
+        // العلاقة pivot من جدول program_supervisors
+        return $this->belongsToMany(Program::class, 'program_supervisors')->withTimestamps();
+    }
+
+    public function plans()
+    {
+        return $this->hasMany(WeeklySupervisorPlan::class);
+    }
+
+    public function visitReports()
+    {
+        return $this->hasManyThrough(
+            VisitReport::class,
+            WeeklySupervisorPlan::class,
+            'supervisor_id',
+            'weekly_supervisor_plan_id'
+        );
+    }
+}
+
+
+class User extends Authenticatable implements LaratrustUser
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable, HasRolesAndPermissions;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'national_id',
+        'gender',
+        'education_region_id', // ربط المستخدم بالمنطقة التعليمية
+        'password',
+        'user_type', // نوع المستخدم (طالب، معلم، مدير مدرسة، مشرف)
+        'status',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    /**
+     * Get the user's initials
+     */
+    public function initials(): string
+    {
+        return Str::of($this->name)
+            ->explode(' ')
+            ->take(2)
+            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->implode('');
+    }
+
+    // علاقات المستخدم
+
+    public function provinces()
+    {
+        return $this->belongsToMany(Province::class);
+    }
+
+    public function educationRegion()
+    {
+        return $this->belongsTo(EducationRegion::class);
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->hasOne(Supervisor::class);
+    }
+
+    public function giftedTeacher()
+    {
+        return $this->hasOne(GiftedTeacher::class);
+    }
+
+    public function managerOfSchool()
+    {
+        return $this->hasOne(School::class, 'school_manager_user_id');
+    }
+
+    public function teacherOfSchool()
+    {
+        return $this->hasOne(School::class, 'gifted_teacher_user_id');
+    }
+
+    public function nominationsMade()
+    {
+        return $this->hasMany(ProgramNomination::class, 'nominated_by');
+    }
+
+    public function responsibilities()
+    {
+        return $this->belongsToMany(Responsibility::class)->withTimestamps();
+    }
+
+    public function programRegistrations()
+    {
+        return $this->hasMany(ProgramRegistration::class);
+    }
+}
+
+
+
+
+class VisitReport extends Model
+{
+    protected $fillable = [
+        'weekly_plan_item_id',
+        'visited_at',
+        'summary',
+        'recommendations',
+        'status',
+    ];
+
+    public function weeklyPlan()
+    {
+        return $this->belongsTo(WeeklyPlanItem::class, 'weekly_plan_item_id');
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+}
+
+
+
+class WeeklyPlanItem extends Model
+{
+    protected $fillable = [
+        'weekly_supervisor_plan_id',
+        'date',
+        'location',
+        'title',
+        'objectives',
+        'activities',
+        'notes',
+        'status',
+    ];
+
+    public function weeklyPlan()
+    {
+        return $this->belongsTo(WeeklySupervisorPlan::class, 'weekly_supervisor_plan_id');
+    }
+
+    public function visitReport() : HasOne
+    {
+        return $this->hasOne(VisitReport::class);
+    }
+}
+
+
+
+
+class WeeklySupervisorPlan extends Model
+{
+    protected $fillable =[
+        'supervisor_id',
+        'week_start',
+        'week_end',
+    ];
+
+    public function supervisor() : BelongsTo
+    {
+        return $this->belongsTo(Supervisor::class);
+    }
+
+    public function items() : HasMany
+    {
+        return $this->hasMany(WeeklyPlanItem::class);
+    }
+
+    public function visitReports()
+    {
+        return $this->hasMany(VisitReport::class);
+    }
+}

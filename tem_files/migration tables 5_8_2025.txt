@@ -1,0 +1,301 @@
+Schema::create('education_regions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // مثال: جازان، مكة، الرياض
+            $table->boolean('status')->default(1);
+            $table->timestamps();
+        });
+
+Schema::create('provinces', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('education_region_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone');
+            $table->string('national_id')->unique();
+            $table->foreignId('education_region_id')->nullable()->constrained('education_regions')->nullOnDelete();
+            $table->enum('gender', ['male', 'female']);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->enum('user_type', ['student', 'teacher', 'school_manager', 'supervisor']);
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+
+Schema::create('academic_years', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // مثل: 1446/1447
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('administrative_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->text('description');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('schools', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->enum('educational_stage', ['kindergarten','primary','middle','secondary','complex']);
+            $table->enum('educational_type', ['governmental', 'private', 'international', 'complex']);
+            $table->enum('educational_gender', ['male', 'female']);
+            $table->string('ministry_code');
+            $table->foreignId('school_manager_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('gifted_teacher_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('students', function (Blueprint $table) {
+            $table->id();
+            $table->date('birth_date');
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->float('talent_score_1')->nullable();
+            $table->float('talent_score_2')->nullable();
+            $table->float('talent_score_3')->nullable();
+            $table->date('year__score_1');
+            $table->date('year__score_2');
+            $table->date('year__score_3');
+            $table->enum('talent_type', ['promising', 'talented', ' exceptionally_talented']);
+            $table->text('note')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('supervisors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('administrative_role_id')->constrained('administrative_roles')->onDelete('restrict');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('programs', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->text('description');
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->foreignId('manager_id')->constrained('supervisors')->onDelete('cascade');
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade');
+            $table->boolean('allow_self_registration')->default(false);
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('specializations', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+
+Schema::create('gifted_teachers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('specialization_id')->constrained()->onDelete('cascade');
+            $table->string('academic_qualification')->nullable();
+            $table->integer('experience_years')->nullable();
+            $table->timestamp('assigned_at')->nullable();
+            $table->text('notes')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+
+Schema::create('program_registrations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->timestamp('registered_at')->nullable();
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed'])->default('pending');
+            $table->text('evaluation')->nullable();
+            $table->string('certificate_url')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('province_supervisor', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('status')->default(1);
+            $table->text('notes')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('program_supervisors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_lead')->default(false);
+            $table->timestamp('assigned_at')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('responsibilities', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique(); // اسم المهمة
+            $table->string('code')->unique(); // رمز فريد للمهمة
+            $table->text('description')->nullable(); // وصف المهمة
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->string('scope_type')->nullable(); // كيان المهمة مثل (program, school, etc.)
+            $table->unsignedBigInteger('scope_id')->nullable(); // id للكيان المرتبط
+            $table->timestamps();
+        });
+
+
+
+Schema::create('responsibility_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('responsibility_id')->constrained('responsibilities')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+
+Schema::create('weekly_supervisor_plans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->date('week_start');
+            $table->date('week_end');
+            $table->timestamps();
+        });
+
+
+Schema::create('weekly_plan_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('weekly_supervisor_plan_id')->constrained()->onDelete('cascade');
+            $table->date('date');
+            $table->string('location');
+            $table->string('title');
+            $table->text('objectives')->nullable();
+            $table->text('activities')->nullable();
+            $table->text('notes')->nullable();
+            $table->enum('status', ['pending', 'done'])->default('pending');
+            $table->timestamps();
+        });
+
+
+Schema::create('visit_reports', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('weekly_plan_item_id')->constrained()->onDelete('cascade'); // الربط بالمهمة الأسبوعية
+            $table->dateTime('visited_at');
+            $table->text('summary')->nullable();           // ملخص الزيارة
+            $table->text('recommendations')->nullable();   // التوصيات
+            $table->enum('status', ['done', 'delayed', 'cancelled'])->default('done');
+            $table->timestamps();
+        });
+
+
+Schema::create('program_reports', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->date('report_date');
+            $table->text('summary')->nullable();
+            $table->unsignedInteger('attendees_count')->default(0);
+            $table->text('achievements')->nullable();
+            $table->text('evaluation')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('program_nominations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('nominated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->text('note')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('student_academic_records', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade'); // الطالب
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade'); // العام الدراسي
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+
+            $table->enum('grade', [
+                'KG1', 'KG2',
+                'G1', 'G2', 'G3', 'G4', 'G5', 'G6',
+                'G7', 'G8', 'G9',
+                'G10', 'G11', 'G12'
+            ]); // الصف الدراسي
+
+            $table->enum('stage', ['kindergarten', 'primary', 'middle', 'secondary']); // المرحلة الدراسية
+
+            $table->float('talent_score')->nullable(); // نتيجة مقياس موهبة
+            $table->enum('talent_type', ['promising', 'talented', 'exceptionally_talented'])->nullable(); // التصنيف
+
+            $table->boolean('promoted')->default(false); // هل انتقل للسنة التالية
+            $table->boolean('transferred')->default(false); // هل تم نقله لمدرسة أخرى
+            $table->text('note')->nullable(); // ملاحظات إضافية
+
+            $table->timestamps();
+        });
+
+
+Schema::create('province_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('province_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+
+Schema::create('program_indicators', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_id')->constrained()->onDelete('cascade');
+            $table->string('title'); // اسم المؤشر
+            $table->enum('type', ['numeric', 'action']); // كمي / إجراء
+            $table->unsignedInteger('target_value')->nullable(); // للنوع الكمي
+            $table->boolean('is_required')->default(true); // هل هو إلزامي
+            $table->timestamps();
+        });
+
+
+Schema::create('program_indicator_progress', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('program_indicator_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade');
+            $table->unsignedInteger('achieved_value')->nullable(); // للأرقام
+            $table->date('progress_date'); // تاريخ التقدم
+            $table->text('note')->nullable(); // للملاحظات
+            $table->boolean('is_completed')->default(false); // للإجراء
+            $table->timestamps();
+        });
+
+
+
