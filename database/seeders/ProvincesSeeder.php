@@ -25,6 +25,9 @@ class ProvincesSeeder extends Seeder
             ['name' => 'الريث', 'education_region_id' => 1, 'status' => 1],
             ['name' => 'العيدابي', 'education_region_id' => 1, 'status' => 1],
             ['name' => 'الداير', 'education_region_id' => 1, 'status' => 1],
+            ['name' => 'ضمد', 'education_region_id' => 1, 'status' => 1],
+            ['name' => 'هروب', 'education_region_id' => 1, 'status' => 1],
+            ['name' => 'فيفا', 'education_region_id' => 1, 'status' => 1],
             ['name' => 'الدرب', 'education_region_id' => 1, 'status' => 1],
         ]);
     }

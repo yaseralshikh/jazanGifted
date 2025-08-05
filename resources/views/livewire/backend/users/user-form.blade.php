@@ -2,7 +2,7 @@
     <flux:modal name="user-form" class="md:w-[800px]">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ $user ? 'ُEdit User' : 'Create user' }}</flux:heading>
+                <flux:heading size="lg">{{ $user ? 'Edit User' : 'Create user' }}</flux:heading>
                 <flux:text class="mt-2 mb-2">Add details for user.</flux:text>
                 <flux:separator variant="subtle" />
             </div>

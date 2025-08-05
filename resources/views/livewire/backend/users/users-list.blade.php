@@ -47,35 +47,34 @@
                     <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
                         <flux:icon.arrow-down-on-square variant="solid" class="w-5 h-5 text-green-600" />
                     </x-button>
-
                     {{-- زر تصدير PDF --}}
                     <x-button wire:click="exportPdf" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير PDF">
                         <flux:icon.document-text variant="solid" class="w-5 h-5 text-red-600" />
                     </x-button>
-
                     {{-- total users --}}
-                    <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($users) ? $users->count() : 0 }})</span>                    </div>
+                    <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($users) ? $users->count() : 0 }})</span>  
+                </div>
             </div>
 
             {{-- Filters --}}
-            <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-50">
+            <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-30">
                 <option value="">All Regions</option>
                 @foreach($regions as $region)
                     <option value="{{ $region->id }}">{{ $region->name }}</option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="provinceFilter" wire:change="$refresh" class="md:w-50">
+            <flux:select wire:model="provinceFilter" wire:change="$refresh" class="md:w-25">
                 <option value="">All Provinces</option>
                 @foreach($provinces as $province)
                     <option value="{{ $province->id }}">{{ $province->name }}</option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-50">
+            <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-25">
                 @foreach($genderOptions as $id => $name)
                     <option value="{{ $id }}">{{ $name }}</option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="userTypeFilter" wire:change="$refresh" class="md:w-50">
+            <flux:select wire:model="userTypeFilter" wire:change="$refresh" class="md:w-30">
                 @foreach ($userTypeOptions as $id => $name)
                     <option value="{{ $id }}">{{ $name }}</option>
                 @endforeach
@@ -108,6 +107,30 @@
                         @if($sortDirection === 'asc') ↑ @else ↓ @endif
                     @endif
                 </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('email')">
+                    Email
+                    @if($sortField === 'email')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('phone')">
+                    Phone
+                    @if($sortField === 'phone')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('national_id')">
+                    National Id
+                    @if($sortField === 'national_id')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('user_type')">
+                    User Type
+                    @if($sortField === 'user_type')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
                 <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('province_id')">
                     Province
                     @if($sortField === 'province_id')
@@ -121,8 +144,12 @@
             <tbody>
                 @forelse ($users as $user)                    
                     <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200 text-center" wire:key="user-{{ $user->id }}">
-                        <td class="px-6 py-2 font-medium text-gray-900">{{  $loop->iteration  }}</td>
+                        <td class="px-6 py-2 font-medium text-gray-900">{{ $loop->iteration }}</td>
                         <td class="px-6 py-2 text-gray-700">{{ $user->name }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $user->email }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $user->phone }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $user->national_id }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $user->user_type }}</td>
                         <td class="px-6 py-2 text-gray-700">{{ $user->provinces[0]->name }}</td>
                         <td class="px-6 py-2 ">
                             {{-- حالة المنطقة التعليمية --}}
