@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('visit_reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supervisor_id')->constrained()->onDelete('cascade'); // الربط بالمشرف
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
             $table->foreignId('weekly_plan_item_id')->constrained()->onDelete('cascade'); // الربط بالمهمة الأسبوعية
             $table->dateTime('visited_at');
             $table->text('summary')->nullable();           // ملخص الزيارة
@@ -20,7 +23,7 @@ return new class extends Migration
             $table->enum('status', ['done', 'delayed', 'cancelled'])->default('done');
             $table->timestamps();
         });
-    }
+    }   
 
     /**
      * Reverse the migrations.

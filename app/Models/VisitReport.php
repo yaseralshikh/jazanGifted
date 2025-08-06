@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class VisitReport extends Model
 {
     protected $fillable = [
+        'academic_year_id',
+        'supervisor_id',
+        'school_id',
         'weekly_plan_item_id',
         'visited_at',
         'summary',
@@ -17,6 +20,11 @@ class VisitReport extends Model
     public function weeklyPlan()
     {
         return $this->belongsTo(WeeklyPlanItem::class, 'weekly_plan_item_id');
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Supervisor::class);
     }
 
     public function school()
