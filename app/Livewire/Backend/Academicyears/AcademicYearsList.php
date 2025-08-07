@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Backend\Academicyears;
 
+<<<<<<< HEAD
 use Flux;
 use Mpdf\Mpdf;
 use Livewire\Component;
@@ -9,6 +10,13 @@ use App\Exports\AcademicYearsExport;
 use Livewire\Attributes\On;
 use App\Models\AcademicYear;
 use Livewire\WithPagination;
+=======
+use App\Models\AcademicYear;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\Attributes\On;
+use Flux;
+>>>>>>> 41d8c0a751392b9ca182370f87bf3f7acea907e1
 
 class AcademicYearsList extends Component
 {
@@ -16,19 +24,20 @@ class AcademicYearsList extends Component
 
     public $academicYearId;
 
-    public $term = '';
-    public string $sortField = 'id'; // Default field
-    public string $sortDirection = 'asc'; // Default order
+    public string $sortField = 'id';
+    public string $sortDirection = 'asc';
 
-    public $statusFilter = 1; // Default status filter
+    public $term = '';
+    public $statuFilter = true;
 
     public function updatedTerm()
     {
-        $this->resetPage(); // Reset pagination when search term changes
+        $this->resetPage();
     }
 
     public function sortBy($field)
     {
+<<<<<<< HEAD
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
         } else {
@@ -36,12 +45,20 @@ class AcademicYearsList extends Component
             $this->sortDirection = 'asc';
         }
 
+=======
+        $this->sortField = $this->sortField === $field && $this->sortDirection === 'asc'
+            ? 'desc'
+            : 'asc';
+
+        $this->sortField = $field;
+>>>>>>> 41d8c0a751392b9ca182370f87bf3f7acea907e1
         $this->resetPage();
     }
 
     #[On('reloadAcademicYears')]
     public function reloadPage()
     {
+<<<<<<< HEAD
         $this->resetPage(); // Reset pagination when data changes
     }
 
@@ -54,10 +71,25 @@ class AcademicYearsList extends Component
     {
         $this->academicYearId = $academicYearId;
         Flux::modal('delete-academicYear')->show();
+=======
+        $this->resetPage();
+    }
+
+    public function edit($id)
+    {
+        $this->dispatch('editAcademicYear', id: $id);
+    }
+
+    public function delete($id)
+    {
+        $this->academicYearId = $id;
+        Flux::modal('delete-academic-year')->show();
+>>>>>>> 41d8c0a751392b9ca182370f87bf3f7acea907e1
     }
 
     public function destroy()
     {
+<<<<<<< HEAD
         $academicYear = AcademicYear::find($this->academicYearId);
         // حذف العلاقات المرتبطة
         $academicYear->programs()?->delete();              // جدول programs
@@ -149,5 +181,29 @@ class AcademicYearsList extends Component
             ->paginate(20);
 
         return view('livewire.backend.academicyears.Academic-years-list', compact('AcademicYears'));
+=======
+        AcademicYear::findOrFail($this->academicYearId)->delete();
+        $this->reset('academicYearId');
+        $this->dispatch('reloadAcademicYears');
+        $this->dispatch('showSuccessAlert', message: 'تم حذف العام الدراسي بنجاح');
+        Flux::modal('delete-academic-year')->close();
+    }
+
+    public function getAcademicYearsProperty()
+    {
+        return AcademicYear::query()
+            ->when($this->term, fn($q) =>
+                $q->where('name', 'like', "%{$this->term}%")
+            )
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
+    }
+
+    public function render()
+    {
+        return view('livewire.backend.academicyears.academic-years-list', [
+            'academicYears' => $this->academicYears,
+        ]);
+>>>>>>> 41d8c0a751392b9ca182370f87bf3f7acea907e1
     }
 }
