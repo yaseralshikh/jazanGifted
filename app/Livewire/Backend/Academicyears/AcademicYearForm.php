@@ -8,7 +8,7 @@ use Livewire\Attributes\On;
 use App\Models\AcademicYear;
 use Illuminate\Validation\Rule;
 
-class AcademicYearsForm extends Component
+class AcademicYearForm extends Component
 {
     public ?AcademicYear $academicYear = null;
     public $academicYearId;

@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Backend\Academicyears;
 
-use App\Models\AcademicYear;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\Attributes\On;
 use Flux;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use App\Models\AcademicYear;
+use Livewire\WithPagination;
 
 class AcademicYearsList extends Component
 {
@@ -49,7 +49,7 @@ class AcademicYearsList extends Component
     public function delete($id)
     {
         $this->academicYearId = $id;
-        Flux::modal('delete-academic-year')->show();
+        Flux::modal('delete-academicYear')->show();
     }
 
     public function destroy()
@@ -58,7 +58,7 @@ class AcademicYearsList extends Component
         $this->reset('academicYearId');
         $this->dispatch('reloadAcademicYears');
         $this->dispatch('showSuccessAlert', message: 'تم حذف العام الدراسي بنجاح');
-        Flux::modal('delete-academic-year')->close();
+        Flux::modal('delete-academicYear')->close();
     }
 
     public function getAcademicYearsProperty()

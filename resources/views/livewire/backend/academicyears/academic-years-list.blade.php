@@ -28,7 +28,7 @@
             <div class="flex flex-row justify-start items-center gap-4 mb-4">
                 {{-- button for Create AcademicYear --}}
                 <flux:modal.trigger name="create-academicYear">
-                    @permission('academicYears-create')
+                    @permission('users-create')
                     <flux:button wire:click="$dispatch('createAcademicYear')" variant="primary" class="flex items-center gap-2">
                         <flux:icon.plus class="w-4 h-4" />
                         Create academicYear
@@ -44,13 +44,13 @@
                 {{-- button for Export --}}
                 <div class="flex items-center gap-2">
                     {{-- زر تصدير Excel --}}
-                    <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
+                    {{-- <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
                         <flux:icon.arrow-down-on-square variant="solid" class="w-5 h-5 text-green-600" />
-                    </x-button>
+                    </x-button> --}}
                     {{-- زر تصدير PDF --}}
-                    <x-button wire:click="exportPdf" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير PDF">
+                    {{-- <x-button wire:click="exportPdf" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير PDF">
                         <flux:icon.document-text variant="solid" class="w-5 h-5 text-red-600" />
-                    </x-button>
+                    </x-button> --}}
                     {{-- total academicYears --}}
                     <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($academicYears) ? $academicYears->count() : 0 }})</span>  
                 </div>
@@ -89,15 +89,29 @@
                         @if($sortDirection === 'asc') ↑ @else ↓ @endif
                     @endif
                 </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('start_date')">
+                    Start Date
+                    @if($sortField === 'start_date')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
+                <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('end_date')">
+                    End Date
+                    @if($sortField === 'end_date')
+                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                    @endif
+                </th>
                 <th>Status</th>
                 <th scope="col" class="px-6 py-3 w-70">Actions</th>
             </tr>
             </thead>
             <tbody>
-                @forelse ($AcademicYears as $AcademicYear)                    
+                @forelse ($academicYears as $academicYear)
                     <tr class="odd:bg-white even:bg-gray-50 border-b border-gray-200 text-center" wire:key="academicYear-{{ $academicYear->id }}">
                         <td class="px-6 py-2 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-2 text-gray-700">{{ $AcademicYear->name }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $academicYear->name }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $academicYear->start_date->format('Y-m-d') }}</td>
+                        <td class="px-6 py-2 text-gray-700">{{ $academicYear->end_date->format('Y-m-d') }}</td>
                         <td class="px-6 py-2 ">
                             {{-- حالة المنطقة التعليمية --}}
                             @if($academicYear->status)
@@ -107,7 +121,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-2 space-x-1">
-                            @permission('academicYears-update')
+                            @permission('users-update')
                                 {{-- <flux:button variant="primary" size="sm" wire:click="edit({{ $academicYear->id }})">Edit</flux:button> --}}
                                 <flux:button variant="primary" size="sm" wire:click="$dispatch('editAcademicYear', { id: {{ $academicYear->id }} })">Edit</flux:button>
                             @else
@@ -115,7 +129,7 @@
                             @endpermission  
                             
                             {{-- زر حذف --}}
-                            @permission('academicYears-delete')
+                            @permission('users-delete')
                             <flux:button variant="danger" size="sm" wire:click="delete({{ $academicYear->id }})">Delete</flux:button>
                             @else
                             <flux:button variant="subtle" size="sm" disabled>Delete</flux:button>
@@ -130,7 +144,7 @@
             </tbody>
         </table>
         <div class="m-4">
-            {{ $AcademicYears->links() }}
+            {{ $academicYears->links() }}
         </div>
     </div>
 </div> 

@@ -13,6 +13,11 @@ class AcademicYear extends Model
         'status',
     ];
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
+
     public function studentRecords()
     {
         return $this->hasMany(StudentAcademicRecord::class);
