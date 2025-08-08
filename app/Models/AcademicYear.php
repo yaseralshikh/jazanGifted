@@ -32,5 +32,8 @@ class AcademicYear extends Model
     {
         return $this->hasMany(Program::class);
     }
-
+    public function academicWeeks()
+    {
+        return $this->hasMany(AcademicWeeks::class);
+    }
 }
