@@ -1,95 +1,96 @@
 <div class="p-4">
-        {{-- for show Create modal --}}
-        <livewire:backend.schools.school-create />
+    {{-- for show Create modal --}}
+    <livewire:backend.schools.school-create />
 
-        {{-- for show Edit modal --}}
-        <livewire:backend.schools.school-edit />
+    {{-- for show Edit modal --}}
+    <livewire:backend.schools.school-edit />
 
-        {{-- for show Delete modal --}}
-        <flux:modal name="delete-school" class="min-w-[22rem]">
-            <div class="space-y-6">
-                <div>
-                    <flux:heading size="lg">Delete school?</flux:heading>
-                    <flux:text class="mt-2">
-                        <p>You're about to delete this school.</p>
-                        <p>This action cannot be reversed.</p>
-                    </flux:text>
-                </div>
-                <div class="flex gap-2">
-                    <flux:spacer />
-                    <flux:modal.close>
-                        <flux:button variant="ghost">Cancel</flux:button>
-                    </flux:modal.close>
-                    <flux:button type="submit" variant="danger" wire:click="destroy()">Delete school</flux:button>
-                </div>
+    {{-- for show Delete modal --}}
+    <flux:modal name="delete-school" class="min-w-[22rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Delete school?</flux:heading>
+                <flux:text class="mt-2">
+                    <p>You're about to delete this school.</p>
+                    <p>This action cannot be reversed.</p>
+                </flux:text>
             </div>
-        </flux:modal>
-
-        {{-- for Create & Search button --}}
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-            <div class="flex flex-row justify-start items-center gap-4 mb-4">
-                {{-- button for create school --}}
-                <flux:modal.trigger name="create-school">
-                    @permission('users-create')
-                        <flux:button variant="primary" class="flex items-center gap-2">
-                            <flux:icon.plus class="w-4 h-4" />
-                            Create school
-                        </flux:button>
-                    @else
-                        <flux:button variant="subtle" class="flex items-center gap-2" disabled>
-                            <flux:icon.plus class="w-4 h-4" />
-                            Create school
-                        </flux:button>
-                    @endpermission
-                </flux:modal.trigger>
-
-                <div class="flex items-center gap-2">
-                    {{-- زر تصدير Excel --}}
-                    <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
-                        <flux:icon.arrow-down-on-square variant="solid" class="w-5 h-5 text-green-600" />
-                    </x-button>
-
-                    {{-- زر تصدير PDF --}}
-                    <x-button wire:click="exportPdf" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير PDF">
-                        <flux:icon.document-text variant="solid" class="w-5 h-5 text-red-600" />
-                    </x-button>
-
-                    {{-- total schools --}}
-                    <span class="ml-2 text-sm text-gray-500">Total Regions: ({{ isset($schools) ? $schools->count() : 0 }})</span>                    </div>
-            </div>
-
-            {{-- loading search --}}
-            <div wire:loading.delay wire:target="term" dir="rtl" class="text-sm text-gray-500 mt-1">جاري البحث...</div>
-            
-            <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-50">
-                <option value="">All Regions</option>
-                @foreach($regions as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                @endforeach
-            </flux:select>
-            <flux:select wire:model="provinceFilter" wire:change="$refresh" class="md:w-50">
-                <option value="">All Provinces</option>
-                @foreach($provinces as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                @endforeach
-            </flux:select>
-            <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-50">
-                <option value="">All Gender</option>
-                <option value="male">Mail</option>
-                <option value="'female">Female</option>
-            </flux:select>
-
-            {{-- زر البحث --}}
-            <div class="w-full md:w-96 relative">
-                <flux:input placeholder="Search schools" wire:model.live.debounce.300ms="term">
-                    <x-slot name="iconTrailing">
-                        @if($term)
-                            <flux:button size="sm" variant="subtle" icon="x-mark" class="-mr-1" wire:click="$set('term', '')" />
-                        @endif
-                    </x-slot>
-                </flux:input>
+            <div class="flex gap-2">
+                <flux:spacer />
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" variant="danger" wire:click="destroy()">Delete school</flux:button>
             </div>
         </div>
+    </flux:modal>
+
+    {{-- for Create & Search button --}}
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <div class="flex flex-row justify-start items-center gap-4 mb-4">
+            {{-- button for create school --}}
+            <flux:modal.trigger name="create-school">
+                @permission('users-create')
+                    <flux:button variant="primary" class="flex items-center gap-2">
+                        <flux:icon.plus class="w-4 h-4" />
+                        Create school
+                    </flux:button>
+                @else
+                    <flux:button variant="subtle" class="flex items-center gap-2" disabled>
+                        <flux:icon.plus class="w-4 h-4" />
+                        Create school
+                    </flux:button>
+                @endpermission
+            </flux:modal.trigger>
+
+            <div class="flex items-center gap-2">
+                {{-- زر تصدير Excel --}}
+                <x-button wire:click="exportExcel" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير Excel">
+                    <flux:icon.arrow-down-on-square variant="solid" class="w-5 h-5 text-green-600" />
+                </x-button>
+
+                {{-- زر تصدير PDF --}}
+                <x-button wire:click="exportPdf" color="success" class="p-2 w-10 h-10 flex items-center justify-center" title="تصدير PDF">
+                    <flux:icon.document-text variant="solid" class="w-5 h-5 text-red-600" />
+                </x-button>
+
+                {{-- total schools --}}
+                <span class="ml-2 text-sm text-gray-500">Total Regions: ({{ isset($schools) ? $schools->count() : 0 }})</span>
+            </div>
+        </div>
+
+        {{-- loading search --}}
+        <div wire:loading.delay wire:target="term" dir="rtl" class="text-sm text-gray-500 mt-1">جاري البحث...</div>
+        
+        <flux:select wire:model="regionFilter" wire:change="$refresh" class="md:w-50">
+            <option value="">All Regions</option>
+            @foreach($regions as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </flux:select>
+        <flux:select wire:model="provinceFilter" wire:change="$refresh" class="md:w-50">
+            <option value="">All Provinces</option>
+            @foreach($provinces as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </flux:select>
+        <flux:select wire:model="genderFilter" wire:change="$refresh" class="md:w-50">
+            <option value="">All Gender</option>
+            <option value="male">Mail</option>
+            <option value="'female">Female</option>
+        </flux:select>
+
+        {{-- زر البحث --}}
+        <div class="w-full md:w-96 relative">
+            <flux:input placeholder="Search schools" wire:model.live.debounce.300ms="term">
+                <x-slot name="iconTrailing">
+                    @if($term)
+                        <flux:button size="sm" variant="subtle" icon="x-mark" class="-mr-1" wire:click="$set('term', '')" />
+                    @endif
+                </x-slot>
+            </flux:input>
+        </div>
+    </div>
 
     {{-- Display Details Table --}}
     <div class="overflow-x-auto mt-4 rounded-lg shadow">

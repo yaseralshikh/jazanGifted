@@ -17,6 +17,10 @@ class GiftedTeacher extends Model
         'notes',
     ];
 
+    protected $casts = [
+        'assigned_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,5 +34,10 @@ class GiftedTeacher extends Model
     public function specialization()
     {
         return $this->belongsTo(Specialization::class);
+    }
+
+    public function getAssignedAtFormattedAttribute()
+    {
+        return $this->assigned_at?->format('Y-m-d');
     }
 }

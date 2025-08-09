@@ -31,6 +31,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:su
     // Admin Academic Weeks
     Route::view('academic-weeks', 'livewire.backend.academic-weeks.academic-weeks')
         ->name('academic-weeks');
+    // Admin Gifted Teachers
+    Route::view('gifted-teachers', 'livewire.backend.gifted-teachers.gifted-teachers')
+        ->name('gifted-teachers');
 });
 
 Route::middleware(['auth'])->group(function () {
