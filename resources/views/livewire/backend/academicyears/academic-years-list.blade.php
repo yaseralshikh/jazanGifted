@@ -52,7 +52,7 @@
                         <flux:icon.document-text variant="solid" class="w-5 h-5 text-red-600" />
                     </x-button> --}}
                     {{-- total academicYears --}}
-                    <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($academicYears) ? $academicYears->count() : 0 }})</span>  
+                    <span class="ml-2 text-sm text-gray-500">Total: ({{ isset($academicYears) ? $academicYears->count() : 0 }})</span>
                 </div>
             </div>
 

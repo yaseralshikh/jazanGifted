@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('week_number'); // رقم الأسبوع داخل السنة
             $table->date('start_date'); // بداية الأسبوع
             $table->date('end_date');   // نهاية الأسبوع
-            $table->boolean('is_active')->default(true); // لتفعيل / تعطيل الأسبوع
+            $table->boolean('status')->default(true); // لتفعيل / تعطيل الأسبوع
             $table->foreignId('academic_year_id')->constrained()->onDelete('cascade'); // ربط بالأعوام الدراسية
             $table->timestamps();
         });

@@ -4,15 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AcademicWeeks extends Model
+class AcademicWeek extends Model
 {
     protected $fillable = [
         'label',
         'week_number',
         'start_date',
         'end_date',
-        'is_active',
+        'status',
         'academic_year_id',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'status' => 'boolean',
     ];
 
     public function academicYear()
@@ -22,6 +28,6 @@ class AcademicWeeks extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('status', true);
     }
 }

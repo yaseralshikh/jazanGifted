@@ -28,6 +28,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:su
     // Admin Academic Years
     Route::view('academic-years', 'livewire.backend.academicyears.academic-years')
         ->name('academic-years');
+    // Admin Academic Weeks
+    Route::view('academic-weeks', 'livewire.backend.academic-weeks.academic-weeks')
+        ->name('academic-weeks');
 });
 
 Route::middleware(['auth'])->group(function () {

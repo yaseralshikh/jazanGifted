@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(SpecializationsSeeder::class);
         $this->call(ResponsibilitiesSeeder::class);
+        $this->call(AcademicYearSeeder::class);
+        $this->call(AcademicWeeksSeeder::class);
 
         // User::factory(10)->create();
 

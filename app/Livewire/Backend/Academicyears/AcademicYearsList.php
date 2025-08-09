@@ -18,7 +18,7 @@ class AcademicYearsList extends Component
     public string $sortDirection = 'asc';
 
     public $term = '';
-    public $statuFilter = true;
+    public $statusFilter = true;
 
     public function updatedTerm()
     {
@@ -27,11 +27,13 @@ class AcademicYearsList extends Component
 
     public function sortBy($field)
     {
-        $this->sortField = $this->sortField === $field && $this->sortDirection === 'asc'
-            ? 'desc'
-            : 'asc';
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
 
-        $this->sortField = $field;
         $this->resetPage();
     }
 
@@ -67,6 +69,9 @@ class AcademicYearsList extends Component
             ->when($this->term, fn($q) =>
                 $q->where('name', 'like', "%{$this->term}%")
             )
+            ->when($this->statusFilter !== '', function ($q) {
+                $q->where('status', (int) $this->statusFilter);
+            })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
     }

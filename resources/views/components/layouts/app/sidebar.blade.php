@@ -19,6 +19,7 @@
                     <flux:navlist.item icon="home" :href="route('admin.schools')" :current="request()->routeIs('schools')" wire:navigate>{{ __('Schools') }}</flux:navlist.item>
                     <flux:navlist.item icon="user" :href="route('admin.users')" :current="request()->routeIs('users')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
                     <flux:navlist.item icon="calendar" :href="route('admin.academic-years')" :current="request()->routeIs('academic-years')" wire:navigate>{{ __('Academic Years') }}</flux:navlist.item>
+                    <flux:navlist.item icon="calendar" :href="route('admin.academic-weeks')" :current="request()->routeIs('academic-weeks')" wire:navigate>{{ __('Academic Weeks') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
