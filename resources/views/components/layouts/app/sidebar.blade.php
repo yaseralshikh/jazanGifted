@@ -17,10 +17,13 @@
                     <flux:navlist.item icon="flag" :href="route('admin.education-regions')" :current="request()->routeIs('education-regions')" wire:navigate>{{ __('Regions') }}</flux:navlist.item>
                     <flux:navlist.item icon="warehouse" :href="route('admin.provinces')" :current="request()->routeIs('provinces')" wire:navigate>{{ __('Provinces') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('admin.schools')" :current="request()->routeIs('schools')" wire:navigate>{{ __('Schools') }}</flux:navlist.item>
+                    <flux:separator variant="subtle" />
                     <flux:navlist.item icon="user" :href="route('admin.users')" :current="request()->routeIs('users')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    <flux:navlist.item icon="user" :href="route('admin.gifted-teachers')" :current="request()->routeIs('gifted-teachers')" wire:navigate>{{ __('Gifted Teachers') }}</flux:navlist.item>
+                    <flux:separator variant="subtle" />
                     <flux:navlist.item icon="calendar" :href="route('admin.academic-years')" :current="request()->routeIs('academic-years')" wire:navigate>{{ __('Academic Years') }}</flux:navlist.item>
                     <flux:navlist.item icon="calendar" :href="route('admin.academic-weeks')" :current="request()->routeIs('academic-weeks')" wire:navigate>{{ __('Academic Weeks') }}</flux:navlist.item>
-                    <flux:navlist.item icon="user" :href="route('admin.gifted-teachers')" :current="request()->routeIs('gifted-teachers')" wire:navigate>{{ __('Gifted Teachers') }}</flux:navlist.item>
+                    <flux:separator variant="subtle" />
                 </flux:navlist.group>
             </flux:navlist>
 

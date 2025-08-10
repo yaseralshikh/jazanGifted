@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Backend\GiftedTeachers;
 
+use App\Exports\TeachersExport;
 use Flux;
+use Mpdf\Mpdf;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -135,6 +137,102 @@ class GiftedTeachersList extends Component
             )
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
+    }
+
+    public function exportExcel()
+    {
+        $data = GiftedTeacher::query()
+            ->with(['user','school.province.educationRegion','specialization'])
+            ->when($this->term, function ($q) {
+                $q->whereHas('user', fn($uq) =>
+                    $uq->where('name', 'like', "%{$this->term}%")
+                       ->orWhere('email', 'like', "%{$this->term}%")
+                       ->orWhere('national_id', 'like', "%{$this->term}%")
+                )->orWhereHas('school', fn($sq) =>
+                    $sq->where('name', 'like', "%{$this->term}%")
+                )->orWhereHas('specialization', fn($sp) =>
+                    $sp->where('name', 'like', "%{$this->term}%")
+                );
+            })
+            ->when($this->statusFilter !== '', fn($q) =>
+                $q->where('status', (int) $this->statusFilter)
+            )
+            ->when($this->regionFilter, fn($q) =>
+                $q->whereHas('school.province', fn($pq) =>
+                    $pq->where('education_region_id', $this->regionFilter)
+                )
+            )
+            ->when($this->provinceFilter, fn($q) =>
+                $q->whereHas('school', fn($sq) =>
+                    $sq->where('province_id', $this->provinceFilter)
+                )
+            )
+            ->when($this->schoolFilter, fn($q) =>
+                $q->where('school_id', $this->schoolFilter)
+            )
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->get();
+     
+        // إنشاء الملف وإرجاع اسمه
+        $export = new TeachersExport();
+        $file = $export->export($data); // نمرر البيانات هنا
+        // إظهار رسالة نجاح
+        $this->dispatch('showSuccessAlert', message: 'تم إنشاء الملف بنجاح!');
+
+        return response()->download(public_path($file))->deleteFileAfterSend(true);
+    }
+
+    public function exportPdf()
+    {
+        $data = GiftedTeacher::query()
+            ->with(['user','school.province.educationRegion','specialization'])
+            ->when($this->term, function ($q) {
+                $q->whereHas('user', fn($uq) =>
+                    $uq->where('name', 'like', "%{$this->term}%")
+                       ->orWhere('email', 'like', "%{$this->term}%")
+                       ->orWhere('national_id', 'like', "%{$this->term}%")
+                )->orWhereHas('school', fn($sq) =>
+                    $sq->where('name', 'like', "%{$this->term}%")
+                )->orWhereHas('specialization', fn($sp) =>
+                    $sp->where('name', 'like', "%{$this->term}%")
+                );
+            })
+            ->when($this->statusFilter !== '', fn($q) =>
+                $q->where('status', (int) $this->statusFilter)
+            )
+            ->when($this->regionFilter, fn($q) =>
+                $q->whereHas('school.province', fn($pq) =>
+                    $pq->where('education_region_id', $this->regionFilter)
+                )
+            )
+            ->when($this->provinceFilter, fn($q) =>
+                $q->whereHas('school', fn($sq) =>
+                    $sq->where('province_id', $this->provinceFilter)
+                )
+            )
+            ->when($this->schoolFilter, fn($q) =>
+                $q->where('school_id', $this->schoolFilter)
+            )
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->get();
+
+        $html = view('exports.teachers', compact('data'))->render();
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'default_font' => 'dejavusans', // يدعم العربي مباشرة
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        $fileName = 'teachers_' . now()->format('Ymd_His') . '.pdf';
+        $filePath = public_path($fileName);
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+
+        $this->dispatch('showSuccessAlert', message: 'تم إنشاء ملف PDF بنجاح!');
+
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
     public function getRegionsProperty() { return EducationRegion::all(); }
