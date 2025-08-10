@@ -218,10 +218,17 @@ class GiftedTeachersList extends Component
 
         $html = view('exports.teachers', compact('data'))->render();
 
-        $mpdf = new Mpdf([
+        $mpdf = new \Mpdf\Mpdf([
             'mode' => 'utf-8',
-            'format' => 'A4',
-            'default_font' => 'dejavusans', // يدعم العربي مباشرة
+            'fontDir' => [storage_path('fonts/')],
+            'fontdata' => [
+                'amiri' => [
+                    'R' => 'Amiri-Regular.ttf',
+                    'useOTL' => 0x00, // تعطيل OTL features
+                    'useKashida' => 0, // تعطيل الكشيدة
+                ]
+            ],
+            'default_font' => 'amiri',
         ]);
 
         $mpdf->WriteHTML($html);

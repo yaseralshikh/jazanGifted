@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <style>
             body {
-                font-family: 'XBRiyaz', sans-serif;
+                font-family: 'Amiri', sans-serif;
+                font-weight: bold;
                 direction: rtl;
                 margin: 40px;
             }
