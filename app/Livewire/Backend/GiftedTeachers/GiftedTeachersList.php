@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Backend\GiftedTeachers;
 
+use Flux;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
+use Illuminate\Support\Collection;
 use App\Models\{GiftedTeacher, EducationRegion, Province, School};
-use Flux;
 
 class GiftedTeachersList extends Component
 {
@@ -14,8 +15,18 @@ class GiftedTeachersList extends Component
 
     public $teacherId = null;          // للحذف/التعديل
     public $term = '';                  // بحث عام
+
+    public $education_region_id = null; // لتصفية حسب المنطقة التعليمية
+    public $province_id = null;         // لتصفية حسب المحافظة
+
+    // sortField و sortDirection للتحكم في ترتيب النتائج
     public string $sortField = 'id';
     public string $sortDirection = 'asc';
+
+    // خيارات القوائم
+    public Collection $regions;
+    public Collection $provinces;
+    public Collection $schools;
 
     // فلاتر اختيارية
     public $regionFilter = '';
@@ -23,12 +34,41 @@ class GiftedTeachersList extends Component
     public $schoolFilter = '';
     public $statusFilter = ''; // ''=الكل, '1'=نشط, '0'=غير نشط
 
+    public function mount()
+    {
+        $this->regions = EducationRegion::orderBy('name')->get(['id','name']);
+        $this->provinces = collect();
+        $this->schools = collect();
+    }
+
     public function updated($name)
     {
-        // أي تحديث على الحقول أعلاه يعيد الصفحة الأولى
         if (in_array($name, ['term','regionFilter','provinceFilter','schoolFilter','statusFilter'])) {
             $this->resetPage();
         }
+    }
+
+    // تغيير المنطقة => إعادة تحميل المحافظات + تصفير باقي السلسلة
+    public function updatedRegionFilter($id)
+    {
+        $this->provinceFilter = '';
+        $this->schoolFilter = '';
+
+        $this->provinces = $id
+            ? Province::where('education_region_id', $id)->get(['id','name'])
+            : collect();
+
+        $this->schools = collect();
+    }
+
+    // تغيير المحافظة => تحميل المدارس الخاصة بها
+    public function updatedProvinceFilter($id)
+    {
+        $this->schoolFilter = '';
+
+        $this->schools = $id
+            ? School::where('province_id', $id)->orderBy('name')->get(['id','name'])
+            : collect();
     }
 
     public function sortBy(string $field): void
@@ -86,7 +126,9 @@ class GiftedTeachersList extends Component
                 )
             )
             ->when($this->provinceFilter, fn($q) =>
-                $q->whereHas('school', fn($sq) => $sq->where('province_id', $this->provinceFilter))
+                $q->whereHas('school', fn($sq) =>
+                    $sq->where('province_id', $this->provinceFilter)
+                )
             )
             ->when($this->schoolFilter, fn($q) =>
                 $q->where('school_id', $this->schoolFilter)
@@ -97,20 +139,6 @@ class GiftedTeachersList extends Component
 
     public function getRegionsProperty() { return EducationRegion::all(); }
 
-    public function getProvincesProperty()
-    {
-        return Province::query()
-            ->when($this->regionFilter, fn($q) => $q->where('education_region_id', $this->regionFilter))
-            ->get();
-    }
-
-    public function getSchoolsProperty()
-    {
-        return School::query()
-            ->when($this->provinceFilter, fn($q) => $q->where('province_id', $this->provinceFilter))
-            ->get();
-    }
-
     #[On('reloadGiftedTeachers')]
     public function reloadPage() { $this->resetPage(); }
 
@@ -118,9 +146,6 @@ class GiftedTeachersList extends Component
     {
         return view('livewire.backend.gifted-teachers.gifted-teachers-list', [
             'teachers' => $this->teachers,
-            'regions' => $this->regions,
-            'provinces' => $this->provinces,
-            'schools' => $this->schools,
         ]);
     }
 }

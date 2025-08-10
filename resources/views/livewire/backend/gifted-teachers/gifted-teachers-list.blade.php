@@ -50,29 +50,32 @@
             </div>
         </div>        
         <div class="flex items-center gap-2">
-            {{-- فلترة حسب المنطقة --}}
-            <flux:select wire:model="regionFilter" class="w-40">
+            {{-- المنطقة --}}
+            <flux:select wire:model="regionFilter" wire:change="$refresh" class="w-44">
                 <option value="">All regions</option>
                 @foreach($regions as $r)
                     <option value="{{ $r->id }}">{{ $r->name }}</option>
                 @endforeach
             </flux:select>
-            {{-- فلترة حسب المحافظة --}}
-            <flux:select wire:model="provinceFilter" class="w-40">
+
+            {{-- المحافظة --}}
+            <flux:select wire:model="provinceFilter" wire:change="$refresh" :disabled="$provinces->isEmpty()" class="w-44">
                 <option value="">All provinces</option>
                 @foreach($provinces as $p)
                     <option value="{{ $p->id }}">{{ $p->name }}</option>
                 @endforeach
             </flux:select>
-            {{-- فلترة حسب المدرسة --}}
-            <flux:select wire:model="schoolFilter" class="w-40">
+
+            {{-- المدرسة --}}
+            <flux:select wire:model="schoolFilter" wire:change="$refresh" :disabled="$schools->isEmpty()" class="w-44">
                 <option value="">All schools</option>
                 @foreach($schools as $s)
                     <option value="{{ $s->id }}">{{ $s->name }}</option>
                 @endforeach
             </flux:select>
-            {{-- فلترة حسب الحالة --}}
-            <flux:select wire:model="statusFilter" class="w-32">
+
+            {{-- الحالة --}}
+            <flux:select wire:model="statusFilter" wire:change="$refresh" class="w-36">
                 <option value="">All status</option>
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>
