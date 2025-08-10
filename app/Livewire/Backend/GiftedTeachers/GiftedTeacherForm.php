@@ -2,19 +2,24 @@
 
 namespace App\Livewire\Backend\GiftedTeachers;
 
-use App\Models\GiftedTeacher;
+use Flux;
 use App\Models\User;
 use App\Models\School;
-use App\Models\Specialization;
 use Livewire\Component;
+use App\Models\Province;
 use Livewire\Attributes\On;
+use App\Models\GiftedTeacher;
+use App\Models\Specialization;
+use App\Models\EducationRegion;
 use Illuminate\Validation\Rule;
-use Flux;
 
 class GiftedTeacherForm extends Component
 {
     public ?GiftedTeacher $teacher = null;
     public $teacherId = null;
+
+    public $education_region_id;
+    public $province_id;
 
     public $form = [
         'user_id' => '',
@@ -84,13 +89,49 @@ class GiftedTeacherForm extends Component
         $this->dispatch('showSuccessAlert', message: 'تم حفظ بيانات المعلم الموهوب بنجاح');
         Flux::modal('gifted-teacher-form')->close();
     }
+   // المحافظات
+    public function getProvincesProperty()
+    {
+        if (!$this->education_region_id) {
+            return Province::where('id', $this->province_id)->pluck('name', 'id');
+        }
+        
+        return Province::where('education_region_id', $this->education_region_id)
+            ->pluck('name', 'id');
+    }
+
+    // للمعلمين (teacher)
+    public function getTeachersProperty()
+    {
+        if (!$this->province_id) {
+            return collect(); // في الإنشاء، نرجع قائمة فارغة إذا لم تختر محافظة
+        }
+
+        return User::whereHas('provinces', fn($q) => $q->where('province_id', $this->province_id))
+            ->where('user_type', 'teacher')
+            ->orderBy('name') // ترتيب النتائج حسب الاسم
+            ->get(['name', 'id']);
+    }
+
+    public function getSchoolsProperty()
+    {
+        if (!$this->province_id) {
+            return School::orderBy('name')->get(['id', 'name']);
+        }
+
+        return School::where('province_id', $this->province_id)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+    }
 
     public function render()
     {
         return view('livewire.backend.gifted-teachers.gifted-teacher-form', [
             // نعرض فقط المستخدمين المؤهلين ليكونوا "معلم موهوب"
-            'users' => User::orderBy('name')->get(['id','name']),
-            'schools' => School::orderBy('name')->get(['id','name']),
+            'regions' => EducationRegion::pluck('name', 'id'),
+            'provinces' => $this->provinces,
+            'teachers' => $this->teachers,
+            'schools' => $this->schools,
             'specializations' => Specialization::orderBy('name')->get(['id','name']),
         ]);
     }

@@ -8,10 +8,24 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <flux:select wire:model="education_region_id" wire:change="$refresh" label="Region">
+                    <option value="">Select region</option>
+                    @foreach($regions as $id => $name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </flux:select>
+
+                <flux:select wire:model="province_id" wire:change="$refresh" label="Province">
+                    <option value="">Select province</option>
+                    @foreach($provinces as  $id => $name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </flux:select>
+
                 <flux:select wire:model.defer="form.user_id" label="User">
                     <option value="">Select user</option>
-                    @foreach($users as $u)
-                        <option value="{{ $u->id }}">{{ $u->name }}</option>
+                    @foreach($teachers as $teacher)
+                        <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                     @endforeach
                 </flux:select>
 
