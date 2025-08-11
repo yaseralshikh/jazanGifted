@@ -125,7 +125,12 @@
                         <td>{{ $school->educational_gender }}</td>
                         <td>{{ $school->ministry_code }}</td>
                         <td>{{ $school->school_manager_user_id }}</td>
-                        <td>{{ $school->gifted_teacher_user_id }}</td>
+                        @php
+                            $teacher = $school->giftedTeachers
+                                ->firstWhere('teacher_type', 'dedicated')
+                                ?? $school->giftedTeachers->firstWhere('teacher_type', 'coordinator');
+                        @endphp
+                        <td>{{ $teacher->user->name ?? 'N/A' }}</td>
                         <td>
                             @if($school->status)
                                 <span class="text-green-600">نشط</span>

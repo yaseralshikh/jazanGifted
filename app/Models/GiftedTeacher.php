@@ -13,6 +13,7 @@ class GiftedTeacher extends Model
         'academic_qualification',
         'experience_years',
         'assigned_at',
+        'teacher_type',
         'status',
         'notes',
     ];

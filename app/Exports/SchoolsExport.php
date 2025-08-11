@@ -46,7 +46,13 @@ class SchoolsExport
             $sheet->setCellValue("H{$row}", $school->educational_gender);
             $sheet->setCellValue("E{$row}", $school->ministry_code);
             $sheet->setCellValue("F{$row}", $school->school_manager_user_id);
-            $sheet->setCellValue("G{$row}", $school->gifted_teacher_user_id);
+            $teacher = $school->giftedTeachers()
+                ->whereIn('teacher_type', ['dedicated', 'coordinator'])
+                ->orderByRaw("FIELD(teacher_type, 'dedicated', 'coordinator')") // أولوية للمفرغ
+                ->with('user')
+                ->first();
+            $sheet->setCellValue("G{$row}", $teacher->user->name ?? 'N/A');
+            $sheet->setCellValue("G{$row}", $school->giftedTeachers->first()->name ?? 'N/A');
             $sheet->setCellValue("I{$row}", $school->status ? 'Active' : 'Inactive');
             $row++;
         }

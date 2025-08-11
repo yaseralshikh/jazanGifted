@@ -14,7 +14,6 @@ class School extends Model
         'educational_gender',
         'ministry_code',
         'school_manager_user_id',
-        'gifted_teacher_user_id',
         'status',
     ];
 
@@ -33,9 +32,9 @@ class School extends Model
         return $this->belongsTo(User::class, 'school_manager_user_id');
     }
 
-    public function giftedTeacher()
+    public function giftedTeachers()
     {
-        return $this->belongsTo(User::class, 'gifted_teacher_user_id');
+        return $this->hasMany(GiftedTeacher::class);
     }
 
     public function visitReports()

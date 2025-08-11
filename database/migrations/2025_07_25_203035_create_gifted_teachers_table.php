@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('academic_qualification')->nullable();
             $table->integer('experience_years')->nullable();
             $table->timestamp('assigned_at')->nullable();
+            $table->enum('teacher_type', ['coordinator', 'dedicated', 'teaching']);
             $table->text('notes')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();

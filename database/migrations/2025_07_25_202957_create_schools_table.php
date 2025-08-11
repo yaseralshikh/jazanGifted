@@ -20,7 +20,6 @@ return new class extends Migration
             $table->enum('educational_gender', ['male', 'female']);
             $table->string('ministry_code');
             $table->foreignId('school_manager_user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('gifted_teacher_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });

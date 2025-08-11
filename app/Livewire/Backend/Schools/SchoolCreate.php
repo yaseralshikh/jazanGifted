@@ -20,7 +20,6 @@ class SchoolCreate extends Component
     public $educational_gender;
     public $ministry_code;
     public $school_manager_user_id;
-    public $gifted_teacher_user_id;
     public $status;
 
     protected $rules = [
