@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('school_id')->constrained()->onDelete('cascade');
-            $table->foreignId('specialization_id')->constrained()->onDelete('cascade');
+            $table->foreignId('specialization_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('academic_qualification')->nullable();
             $table->integer('experience_years')->nullable();
             $table->timestamp('assigned_at')->nullable();

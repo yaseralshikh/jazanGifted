@@ -39,7 +39,6 @@
                         <option value="primary">Primary</option>
                         <option value="middle">Middle</option>
                         <option value="secondary">Secondary</option>
-                        <option value="complex">Complex</option>
                     </flux:select>
                 </div>
 
@@ -49,7 +48,6 @@
                         <option value="governmental">Governmental</option>
                         <option value="private">Private</option>
                         <option value="international">International</option>
-                        <option value="complex">Complex</option>
                     </flux:select>
                 </div>
 

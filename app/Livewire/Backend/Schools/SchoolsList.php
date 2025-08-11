@@ -26,7 +26,7 @@ class SchoolsList extends Component
     public string $sortField = 'id'; // Default field
     public string $sortDirection = 'asc'; // Default order
 
-        public function updatedTerm()
+    public function updatedTerm()
     {
         $this->resetPage(); // Reset pagination when search term changes
     }
@@ -74,47 +74,105 @@ class SchoolsList extends Component
 
     public function exportExcel()
     {
-        $data = School::query()
+        $query = School::query()
+            ->with(['province.educationRegion', 'managerAssignment.user', 'giftedTeachers.user'])
             ->when($this->term, fn($q) =>
-                $q->where('name', 'like', '%' . $this->term . '%')
-                ->orWhere('ministry_code', 'like', '%' . $this->term . '%')
+                $q->where(function ($qq) {
+                    $qq->where('name', 'like', "%{$this->term}%")
+                       ->orWhere('ministry_code', 'like', "%{$this->term}%");
+                })
             )
             ->when($this->regionFilter, fn($q) =>
-                $q->where('education_region_id', $this->regionFilter)
-            )
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->latest('created_at')
-            ->get();
-                
-        // إنشاء الملف وإرجاع اسمه
-        $export = new SchoolsExport();
-        $file = $export->export($data); // نمرر البيانات هنا
-        // إظهار رسالة نجاح
-        $this->dispatch('showSuccessAlert', message: 'تم إنشاء الملف بنجاح!');
+                $q->whereHas('province.educationRegion', fn($subQuery) =>
+                    $subQuery->where('id', $this->regionFilter)
+                )
+            );
 
+        if ($this->sortField === 'manager_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT mu.name
+                    FROM school_managers sm
+                    JOIN users mu ON mu.id = sm.user_id
+                    WHERE sm.school_id = schools.id
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } elseif ($this->sortField === 'gifted_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT gu.name
+                    FROM gifted_teachers gt
+                    JOIN users gu ON gu.id = gt.user_id
+                    WHERE gt.school_id = schools.id
+                      AND gt.teacher_type IN ('dedicated','coordinator')
+                    ORDER BY FIELD(gt.teacher_type, 'dedicated','coordinator'), gu.name
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } else {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
+
+        $data = $query->orderBy('schools.created_at', 'desc')->get();
+
+        $export = new SchoolsExport();
+        $file = $export->export($data);
+
+        $this->dispatch('showSuccessAlert', message: 'تم إنشاء الملف بنجاح!');
         return response()->download(public_path($file))->deleteFileAfterSend(true);
     }
 
     public function exportPdf()
     {
-        $data = School::query()
+        $query = School::query()
+            ->with(['province.educationRegion', 'managerAssignment.user', 'giftedTeachers.user'])
             ->when($this->term, fn($q) =>
-                $q->where('name', 'like', '%' . $this->term . '%')
-                ->orWhere('ministry_code', 'like', '%' . $this->term . '%')
+                $q->where(function ($qq) {
+                    $qq->where('name', 'like', "%{$this->term}%")
+                       ->orWhere('ministry_code', 'like', "%{$this->term}%");
+                })
             )
             ->when($this->regionFilter, fn($q) =>
-                $q->where('education_region_id', $this->regionFilter)
-            )
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->latest('created_at')
-            ->get();
+                $q->whereHas('province.educationRegion', fn($subQuery) =>
+                    $subQuery->where('id', $this->regionFilter)
+                )
+            );
+
+        if ($this->sortField === 'manager_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT mu.name
+                    FROM school_managers sm
+                    JOIN users mu ON mu.id = sm.user_id
+                    WHERE sm.school_id = schools.id
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } elseif ($this->sortField === 'gifted_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT gu.name
+                    FROM gifted_teachers gt
+                    JOIN users gu ON gu.id = gt.user_id
+                    WHERE gt.school_id = schools.id
+                      AND gt.teacher_type IN ('dedicated','coordinator')
+                    ORDER BY FIELD(gt.teacher_type, 'dedicated','coordinator'), gu.name
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } else {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
+
+        $data = $query->orderBy('schools.created_at', 'desc')->get();
 
         $html = view('exports.schools', compact('data'))->render();
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
-            'default_font' => 'dejavusans', // يدعم العربي مباشرة
+            'default_font' => 'dejavusans',
         ]);
 
         $mpdf->WriteHTML($html);
@@ -124,16 +182,18 @@ class SchoolsList extends Component
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
         $this->dispatch('showSuccessAlert', message: 'تم إنشاء ملف PDF بنجاح!');
-
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
     public function getSchoolsProperty()
     {
-        return School::query()
+        $query = School::query()
+            ->with(['province.educationRegion', 'managerAssignment.user', 'giftedTeachers.user'])
             ->when($this->term, fn($q) =>
-                $q->where('name', 'like', '%' . $this->term . '%')
-                ->orWhere('ministry_code', 'like', '%' . $this->term . '%')
+                $q->where(function ($qq) {
+                    $qq->where('name', 'like', "%{$this->term}%")
+                       ->orWhere('ministry_code', 'like', "%{$this->term}%");
+                })
             )
             ->when($this->regionFilter, fn($q) =>
                 $q->whereHas('province.educationRegion', fn($subQuery) =>
@@ -145,20 +205,45 @@ class SchoolsList extends Component
             )
             ->when($this->genderFilter, fn($q) =>
                 $q->where('educational_gender', $this->genderFilter)
-            )
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->latest('created_at')
-            ->paginate(25);
-    }    
+            );
+
+        if ($this->sortField === 'manager_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT mu.name
+                    FROM school_managers sm
+                    JOIN users mu ON mu.id = sm.user_id
+                    WHERE sm.school_id = schools.id
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } elseif ($this->sortField === 'gifted_name') {
+            $query->orderByRaw(
+                "COALESCE((
+                    SELECT gu.name
+                    FROM gifted_teachers gt
+                    JOIN users gu ON gu.id = gt.user_id
+                    WHERE gt.school_id = schools.id
+                      AND gt.teacher_type IN ('dedicated','coordinator')
+                    ORDER BY FIELD(gt.teacher_type, 'dedicated','coordinator'), gu.name
+                    LIMIT 1
+                ), '') {$this->sortDirection}"
+            );
+        } else {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
+
+        return $query->orderBy('schools.created_at', 'desc')->paginate(25);
+    }   
 
     public function render()
     {
-        $regions = EducationRegion::pluck('name', 'id');
+        $regions   = EducationRegion::pluck('name', 'id');
         $provinces = Province::where('education_region_id', $this->regionFilter)->pluck('name', 'id');
-        
-        return view('livewire.backend.schools.schools-list',[
-            'schools' => $this->schools,
-            'regions' => $regions,
+
+        return view('livewire.backend.schools.schools-list', [
+            'schools'   => $this->schools,
+            'regions'   => $regions,
             'provinces' => $provinces,
         ]);
     }

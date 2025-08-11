@@ -15,8 +15,8 @@
                 </div>
 
                 <div>
-                    <flux:select 
-                        wire:model="education_region_id" 
+                    <flux:select
+                        wire:model="education_region_id"
                         wire:change="$refresh"
                         selected="{{ $education_region_id }}"
                         label="Region"
@@ -31,14 +31,14 @@
                 </div>
 
                 <div>
-                    <flux:select 
+                    <flux:select
                         wire:model="province_id"
-                        wire:change="$refresh" 
+                        wire:change="$refresh"
                         label="Province"
                     >
                         <option value="">Select province</option>
                         @foreach($provinces as $id => $name)
-                            <option value="{{ $id }}" @selected($id == $province_id)>
+                            <option value="{{ $id }}" @selected($id == $province_id)">
                                 {{ $name }}
                             </option>
                         @endforeach
@@ -52,7 +52,6 @@
                         <option value="primary">Primary</option>
                         <option value="middle">Middle</option>
                         <option value="secondary">Secondary</option>
-                        <option value="complex">Complex</option>
                     </flux:select>
                 </div>
 
@@ -62,23 +61,21 @@
                         <option value="governmental">Governmental</option>
                         <option value="private">Private</option>
                         <option value="international">International</option>
-                        <option value="complex">Complex</option>
                     </flux:select>
                 </div>
 
                 <div>
-                    <flux:select 
-                        wire:model="school_manager_user_id" 
-                        wire:change="$refresh" 
-                        label="School Manager User" 
+                    <flux:select
+                        wire:model="school_manager_user_id"
+                        wire:change="$refresh"
+                        label="School Manager User"
                         searchable
                     >
                         <option value="">Select school manager user</option>
                         @foreach($this->managers as $id => $name)
-                            <option 
-                                value="{{ $id }}" 
+                            <option
+                                value="{{ $id }}"
                                 @selected($id == $school_manager_user_id)
-                                @if($id == $school_manager_user_id) selected @endif
                             >
                                 {{ $name }}
                             </option>
@@ -87,18 +84,17 @@
                 </div>
 
                 <div>
-                    <flux:select 
-                        wire:model="gifted_teacher_user_id" 
-                        wire:change="$refresh" 
-                        label="Gifted Teacher user" 
+                    <flux:select
+                        wire:model="gifted_teacher_user_id"
+                        wire:change="$refresh"
+                        label="Gifted Teacher user"
                         searchable
                     >
                         <option value="">Select gifted teacher user</option>
                         @foreach($this->teachers as $id => $name)
-                            <option 
-                                value="{{ $id }}" 
+                            <option
+                                value="{{ $id }}"
                                 @selected($id == $gifted_teacher_user_id)
-                                @if($id == $gifted_teacher_user_id) selected @endif
                             >
                                 {{ $name }}
                             </option>
